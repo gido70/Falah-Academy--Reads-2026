@@ -602,6 +602,15 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);direc
               <div style="margin-top:10px;font-size:12px;color:var(--muted);line-height:1.7">
                 📌 عند أي تعديل: ارفع الملف الجديد وسيتحدث خلال دقيقتين
               </div>
+              <div id="supaStatus" style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px">⏳ جاري فحص الاتصال...</div>
+              <div style="display:flex;gap:8px;margin-top:10px">
+                <input id="supaKeyInput" type="password" placeholder="أدخل Supabase anon key..." 
+                  style="flex:1;border:1.5px solid var(--border);border-radius:10px;padding:8px 12px;font-family:monospace;font-size:12px;background:var(--bg)">
+                <button class="btn bp bs" onclick="activateSupabase()">🔌 تفعيل</button>
+              </div>
+              <div style="margin-top:6px;font-size:11px;color:var(--muted)">
+                المفتاح يُحفظ في المتصفح — Supabase URL: <code style="font-size:10px">nmbbahzzogspuuvpsxud.supabase.co</code>
+              </div>
             </div>
           </div>
         </div>
@@ -619,8 +628,9 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);direc
                 ١. اذهب إلى <a href="https://supabase.com" onclick="safeOpenInBrowser('https://supabase.com','Supabase');return false" style="color:var(--blue);font-weight:700">supabase.com</a><br>
                 ٢. <strong>New Project</strong> → اسمه: <code style="background:#f0f5fc;padding:2px 7px;border-radius:4px">falah-reads</code><br>
                 ٣. اختر المنطقة: <strong>Middle East (Bahrain)</strong><br>
-                ٤. أرسل لي: رابط المشروع + <code style="background:#f0f5fc;padding:2px 7px;border-radius:4px">anon key</code><br>
-                ٥. أبني لك ملف الربط الكامل
+                ٤. اذهب إلى <strong>Settings → API</strong><br>
+                انسخ: <strong>anon public key</strong><br>
+                ٥. اضغط زر التفعيل أدناه وأدخل المفتاح
               </div>
             </div>
             <div>
@@ -844,6 +854,196 @@ const DL_ACCT = [
   { icon:'📂', name:'موارد القراءة المشتركة', desc:'ملفات ومصادر القراءة المشتركة من أخصائيات أكاديمية الفلاح', link:'https://share.google/LjF1ZZaRzxbO7Viy2' },
 ];
 
+
+// ════════════════════════════════════════════════════════
+//  SUPABASE CONFIG
+//  ← أدخل الـ anon key من: Supabase → Settings → API
+// ════════════════════════════════════════════════════════
+var SUPA_URL = 'https://nmbbahzzogspuuvpsxud.supabase.co';
+var SUPA_KEY = 'YOUR_ANON_KEY_HERE'; // ← ضع مفتاحك هنا
+
+var supaEnabled = (SUPA_KEY !== 'YOUR_ANON_KEY_HERE');
+
+// ── Supabase helper ──────────────────────────────────────
+var SB = {
+  _h: function() {
+    return {
+      'Content-Type': 'application/json',
+      'apikey': SUPA_KEY,
+      'Authorization': 'Bearer ' + SUPA_KEY
+    };
+  },
+  get: async function(table, filters) {
+    if (!supaEnabled) return null;
+    var url = SUPA_URL + '/rest/v1/' + table + '?select=*';
+    if (filters) url += '&' + filters;
+    var r = await fetch(url, {headers: SB._h()});
+    if (!r.ok) return null;
+    return await r.json();
+  },
+  post: async function(table, data) {
+    if (!supaEnabled) return null;
+    var r = await fetch(SUPA_URL + '/rest/v1/' + table, {
+      method: 'POST',
+      headers: Object.assign({'Prefer':'return=representation'}, SB._h()),
+      body: JSON.stringify(data)
+    });
+    if (!r.ok) return null;
+    return await r.json();
+  },
+  patch: async function(table, filter, data) {
+    if (!supaEnabled) return null;
+    var r = await fetch(SUPA_URL + '/rest/v1/' + table + '?' + filter, {
+      method: 'PATCH',
+      headers: Object.assign({'Prefer':'return=representation'}, SB._h()),
+      body: JSON.stringify(data)
+    });
+    if (!r.ok) return null;
+    return await r.json();
+  },
+  del: async function(table, filter) {
+    if (!supaEnabled) return null;
+    var r = await fetch(SUPA_URL + '/rest/v1/' + table + '?' + filter, {
+      method: 'DELETE',
+      headers: SB._h()
+    });
+    return r.ok;
+  }
+};
+
+// ── DB Override: reads from Supabase, falls back to localStorage ──
+var DB_supa = {
+  // Schools
+  getSchools: async function() {
+    if (!supaEnabled) return DB.g('schools');
+    var data = await SB.get('fr_schools', 'order=name');
+    if (!data) return DB.g('schools');
+    // Convert snake_case to camelCase
+    return data.map(function(s){ return {
+      id:s.id, name:s.name, city:s.city, icon:s.icon||'🏫',
+      libName:s.lib_name, libPass:s.lib_pass,
+      dirName:s.dir_name, dirPass:s.dir_pass,
+      active:s.active
+    };});
+  },
+  // Books
+  getBooks: async function() {
+    if (!supaEnabled) return DB.g('books');
+    var data = await SB.get('fr_books', 'order=title');
+    if (!data) return DB.g('books');
+    return data.map(function(b){ return {
+      id:b.id, title:b.title, author:b.author, subject:b.subject,
+      year:b.year, level:b.level, pages:b.pages, pts:b.pts,
+      icon:b.icon||'📖', link:b.link||'', img:b.img||'',
+      global:b.global, school:b.school_id
+    };});
+  },
+  // Students with reading records
+  getStudents: async function() {
+    if (!supaEnabled) return DB.g('students');
+    var students = await SB.get('fr_students', 'order=name');
+    var records = await SB.get('fr_reading_records', 'select=student_id,book_id,score,pts_earned');
+    if (!students) return DB.g('students');
+    return students.map(function(s){
+      var myRecords = (records||[]).filter(function(r){return r.student_id===s.id;});
+      var scores = {};
+      myRecords.forEach(function(r){scores[r.book_id]=r.score;});
+      return {
+        id:s.id, school:s.school_id, name:s.name,
+        grade:s.grade, cls:s.class, pts:s.pts,
+        books:myRecords.map(function(r){return r.book_id;}),
+        scores:scores
+      };
+    });
+  },
+  // Save reading record
+  saveRecord: async function(studentId, bookId, score, pts) {
+    if (!supaEnabled) return;
+    await SB.post('fr_reading_records', {
+      student_id: studentId, book_id: bookId,
+      score: score, pts_earned: pts
+    });
+    // Update student pts
+    var students = await SB.get('fr_students', 'id=eq.'+studentId);
+    if (students && students[0]) {
+      var newPts = (students[0].pts||0) + pts;
+      await SB.patch('fr_students', 'id=eq.'+studentId, {pts: newPts});
+    }
+  },
+  // Add school
+  addSchool: async function(sc) {
+    if (!supaEnabled) return;
+    await SB.post('fr_schools', {
+      id:sc.id, name:sc.name, city:sc.city, icon:sc.icon,
+      lib_name:sc.libName, lib_pass:sc.libPass,
+      dir_name:sc.dirName, dir_pass:sc.dirPass
+    });
+  },
+  // Add book
+  addBook: async function(b) {
+    if (!supaEnabled) return;
+    await SB.post('fr_books', {
+      id:b.id, title:b.title, author:b.author, subject:b.subject,
+      year:b.year, level:b.level, pages:b.pages, pts:b.pts,
+      icon:b.icon, link:b.link, img:b.img, publisher:b.publisher,
+      global:b.global, school_id:b.school||null
+    });
+  },
+  // Add student
+  addStudent: async function(st) {
+    if (!supaEnabled) return;
+    await SB.post('fr_students', {
+      id:st.id, school_id:st.school, name:st.name,
+      grade:st.grade, class:st.cls, pts:0
+    });
+  }
+};
+
+// ── SYNC: load from Supabase and cache in localStorage ──
+async function syncFromSupabase() {
+  if (!supaEnabled) return;
+  try {
+    toast('🔄 جاري التزامن مع قاعدة البيانات...');
+    var [schools, books, students] = await Promise.all([
+      DB_supa.getSchools(),
+      DB_supa.getBooks(),
+      DB_supa.getStudents()
+    ]);
+    if (schools && schools.length) DB.s('schools', schools);
+    if (books && books.length) DB.s('books', books);
+    if (students && students.length) DB.s('students', students);
+    toast('✅ تم التزامن مع قاعدة البيانات');
+  } catch(e) {
+    console.error('Supabase sync error:', e);
+    toast('⚠️ تعذّر التزامن — يعمل محلياً');
+  }
+}
+
+// ── Check Supabase status on load ──
+async function checkSupabaseStatus() {
+  var statusEl = document.getElementById('supaStatus');
+  if (!statusEl) return;
+  if (!supaEnabled) {
+    statusEl.textContent = '⚠️ Supabase غير مفعّل — يعمل محلياً';
+    statusEl.style.color = '#b83232';
+    return;
+  }
+  try {
+    var r = await fetch(SUPA_URL + '/rest/v1/fr_schools?limit=1', {headers: SB._h()});
+    if (r.ok) {
+      statusEl.textContent = '✅ Supabase متصل — بيانات مزامنة';
+      statusEl.style.color = '#0a6b52';
+      syncFromSupabase();
+    } else {
+      statusEl.textContent = '❌ خطأ في الاتصال — تحقق من المفتاح';
+      statusEl.style.color = '#b83232';
+    }
+  } catch(e) {
+    statusEl.textContent = '⚠️ يعمل بدون اتصال';
+    statusEl.style.color = '#b83232';
+  }
+}
+
 // ════════════════════════════════════════════════════
 //  DATABASE
 // ════════════════════════════════════════════════════
@@ -1002,6 +1202,7 @@ function goHome(){
 // ════════════════════════════════════════════════════
 function initApp(){
   setAllLogos();
+  if (CU.role === 'admin') setTimeout(checkSupabaseStatus, 500);
   var roles = {admin:'👑 أدمن',director:'🏫 مدير',librarian:'📚 أخصائي',student:'🎒 طالب'};
   document.getElementById('tbRole').textContent = roles[CU.role]||'';
   document.getElementById('tbSch').textContent = CU.schoolName||'جميع المدارس';
@@ -1317,6 +1518,7 @@ function addSchool(){
   if(schools.find(function(s){return s.id===code.toLowerCase();})){toast('⚠️ رمز موجود مسبقاً');return;}
   schools.push({id:code.toLowerCase(),name:n,city:c,icon:ico,libName:libN,libPass:libP,dirName:dirN,dirPass:dirP,active:true});
   DB.s('schools',schools);
+  if(supaEnabled)DB_supa.addSchool({id:code.toLowerCase(),name:n,city:c,icon:ico,libName:libN,libPass:libP,dirName:dirN,dirPass:dirP});
   closeAddSch();
   toast('✅ تمت إضافة "'+n+'" | كود الأخصائي: '+libP);
   rAdminSchools();rAdminHome();buildNav();
@@ -1524,6 +1726,8 @@ function showResult(bookId){
         if(!st[idx].scores)st[idx].scores={};
         st[idx].scores[bookId]=quizSt.score;
         DB.s('students',st);updPts();
+        // Save to Supabase if enabled
+        if(supaEnabled)DB_supa.saveRecord(stu.id,bookId,quizSt.score,pts);
       }
     }
   }
@@ -1762,6 +1966,27 @@ document.addEventListener('click', function(e) {
     }
   }
 });
+
+
+function activateSupabase() {
+  var key = document.getElementById('supaKeyInput').value.trim();
+  if (!key || key.length < 20) { toast('⚠️ المفتاح قصير جداً — تأكد من نسخه كاملاً'); return; }
+  // Save key to localStorage
+  localStorage.setItem('supa_key', key);
+  SUPA_KEY = key;
+  supaEnabled = true;
+  toast('🔌 جاري الاتصال بـ Supabase...');
+  checkSupabaseStatus();
+}
+
+// Load saved key on startup
+(function(){
+  var savedKey = localStorage.getItem('supa_key');
+  if (savedKey && savedKey.length > 20) {
+    SUPA_KEY = savedKey;
+    supaEnabled = true;
+  }
+})();
 
 // ════════════════════════════════════════════════════
 //  INIT
