@@ -1,1 +1,2028 @@
-FalahReads_FINAL.html
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>منصة الفلاح للقراءة — Falah Reads 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0d4a8a;--blue:#1a73be;--teal:#00b4b6;--orange:#f5a623;
+  --gold:#e8941a;--green:#0a6b52;--red:#c0392b;--purple:#4c1d95;
+  --bg:#f4f8fd;--surf:#fff;--text:#0a2540;--muted:#5a7ea8;--border:#cce0f5;
+  --grad:linear-gradient(155deg,#0d4a8a,#1a73be,#00b4b6);
+  --warm:linear-gradient(135deg,#f5a623,#e8941a);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);direction:rtl;min-height:100vh;overflow-x:hidden;}
+.home-btn{position:fixed;top:12px;right:12px;z-index:9999;display:none;align-items:center;gap:6px;padding:8px 16px;border-radius:999px;background:var(--grad);color:#fff;font-family:'Cairo',sans-serif;font-size:13px;font-weight:900;border:2px solid rgba(255,255,255,.4);box-shadow:0 4px 16px rgba(13,74,138,.3);cursor:pointer;transition:all .2s;}
+.home-btn:hover{transform:translateY(-2px);}
+
+/* LOGIN */
+.login-page{min-height:100vh;background:linear-gradient(135deg,#e8f4fd,#f0fbfb,#fef9f0);display:flex;align-items:center;justify-content:center;padding:20px;}
+.login-box{background:#fff;border-radius:28px;padding:36px;width:100%;max-width:440px;box-shadow:0 20px 60px rgba(13,74,138,.15);border:1px solid var(--border);}
+.login-logo{text-align:center;margin-bottom:24px;}
+.login-logo img{height:100px;width:auto;object-fit:contain;display:block;margin:0 auto;}
+.login-logo .ac-name{font-size:22px;font-weight:900;color:var(--navy);margin-top:10px;}
+.login-logo .ac-sub{font-size:13px;color:var(--muted);font-weight:600;}
+.login-logo .plat{font-size:13px;font-weight:700;color:var(--blue);margin-top:8px;padding:4px 14px;background:#e6f0fb;border-radius:20px;display:inline-block;}
+.lf{margin-bottom:12px;}
+.lf label{display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px;}
+.lf input,.lf select{width:100%;border:2px solid var(--border);border-radius:12px;padding:11px 14px;font-family:'Cairo',sans-serif;font-size:14px;background:#f8fbff;color:var(--text);outline:none;transition:border .2s;}
+.lf input:focus,.lf select:focus{border-color:var(--blue);background:#fff;}
+.login-btn{width:100%;background:var(--grad);color:#fff;border:none;border-radius:14px;padding:14px;font-family:'Cairo',sans-serif;font-size:16px;font-weight:900;cursor:pointer;margin-top:4px;transition:opacity .2s;}
+.login-btn:hover{opacity:.9;}
+.login-err{background:#fce8e8;border:1px solid #f5a5a5;border-radius:10px;padding:10px 14px;font-size:13px;color:var(--red);margin-top:10px;display:none;}
+.login-hint{margin-top:16px;background:linear-gradient(135deg,#f0f8ff,#f0fbfb);border:1px solid var(--border);border-radius:12px;padding:12px;}
+.ht{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:7px;}
+.hr{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted);padding:3px 0;}
+.hr code{background:#e6f0fb;padding:2px 8px;border-radius:5px;color:var(--blue);font-size:11px;}
+.hn{font-size:10px;color:var(--muted);margin-top:7px;padding-top:7px;border-top:1px solid var(--border);line-height:1.6;}
+.reset-btn{width:100%;margin-top:8px;background:#fce8e8;border:1px solid #f5a5a5;border-radius:8px;padding:7px;font-family:'Cairo',sans-serif;font-size:11px;font-weight:700;color:var(--red);cursor:pointer;}
+
+/* APP */
+.app{display:none;flex-direction:column;min-height:100vh;}
+.app.on{display:flex;}
+.topbar{background:var(--grad);height:58px;display:flex;align-items:center;padding:0 16px;gap:12px;box-shadow:0 4px 20px rgba(13,74,138,.3);position:sticky;top:0;z-index:200;flex-shrink:0;}
+.tb-brand{display:flex;align-items:center;gap:10px;}
+.tb-logo{height:38px;width:auto;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.2));}
+.tb-name{font-size:14px;font-weight:900;color:#fff;line-height:1.1;}
+.tb-sub{font-size:10px;color:rgba(255,255,255,.72);}
+.tb-sch{background:rgba(0,0,0,.15);border-radius:10px;padding:3px 10px;font-size:11px;color:rgba(255,255,255,.85);font-weight:700;}
+.tb-right{margin-right:auto;display:flex;align-items:center;gap:8px;}
+.tb-pts{background:rgba(245,166,35,.2);border:1.5px solid rgba(245,166,35,.4);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;color:#ffe07a;display:none;}
+.tb-role{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;color:#fff;}
+.tb-out{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.25);border-radius:8px;padding:6px 12px;color:#fff;font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;cursor:pointer;}
+
+/* LAYOUT */
+.bwrap{flex:1;display:flex;overflow:hidden;}
+.snav{width:210px;background:var(--surf);border-left:1px solid var(--border);overflow-y:auto;flex-shrink:0;}
+.sn-top{text-align:center;padding:14px 10px 10px;border-bottom:1px solid var(--border);}
+.sn-top img{height:46px;width:auto;object-fit:contain;margin:0 auto;display:block;}
+.sn-name{font-size:12px;font-weight:900;color:var(--navy);margin-top:5px;}
+.ns{font-size:10px;font-weight:900;color:var(--muted);letter-spacing:1px;padding:11px 16px 3px;}
+.nb{display:flex;align-items:center;gap:8px;padding:9px 16px;width:100%;border:none;background:transparent;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;text-align:right;transition:all .15s;border-right:3px solid transparent;}
+.nb:hover{background:#f0f8ff;color:var(--navy);}
+.nb.on{background:#e6f0fb;color:var(--navy);border-right-color:var(--blue);}
+.nb .ni{font-size:15px;width:18px;text-align:center;}
+.nb-badge{margin-right:auto;background:var(--blue);color:#fff;border-radius:999px;padding:1px 7px;font-size:10px;font-weight:700;}
+.nb-new{margin-right:auto;background:#e0f7f0;color:var(--green);border-radius:999px;padding:1px 7px;font-size:10px;font-weight:700;}
+.cnt{flex:1;overflow-y:auto;padding:20px 18px 60px;}
+
+/* PAGES */
+.pg{display:none;animation:fi .2s ease;}
+.pg.on{display:block;}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* HEADER */
+.ph{background:var(--grad);border-radius:20px;padding:20px 24px;margin-bottom:18px;color:#fff;position:relative;overflow:hidden;}
+.ph::before{content:'';position:absolute;top:-50px;left:-50px;width:200px;height:200px;background:rgba(255,255,255,.05);border-radius:50%;}
+.ph-in{position:relative;z-index:1;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.ph-logo img{height:50px;width:auto;filter:drop-shadow(0 3px 8px rgba(0,0,0,.2));}
+.ph-t{flex:1;}
+.ph-title{font-size:19px;font-weight:900;}
+.ph-sub{font-size:13px;opacity:.85;margin-top:3px;}
+.ph-stats{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;}
+.phs{background:rgba(255,255,255,.12);border-radius:10px;padding:7px 14px;text-align:center;}
+.phs-n{font-size:17px;font-weight:900;color:#ffe07a;line-height:1;}
+.phs-l{font-size:10px;opacity:.8;font-weight:700;margin-top:2px;}
+.ph-bar{margin-top:12px;position:relative;z-index:1;}
+.ph-bar-row{display:flex;justify-content:space-between;font-size:11px;opacity:.8;font-weight:700;margin-bottom:5px;}
+.ph-btrack{height:9px;background:rgba(255,255,255,.2);border-radius:5px;overflow:hidden;}
+.ph-bfill{height:100%;border-radius:5px;background:var(--warm);transition:width 1s ease;}
+
+/* COMPONENTS */
+.sec{font-size:15px;font-weight:900;color:var(--navy);margin:16px 0 11px;display:flex;align-items:center;gap:8px;}
+.sec::after{content:'';flex:1;height:2px;background:linear-gradient(90deg,var(--border),transparent);}
+.krow{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:16px;}
+.kpi{background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center;box-shadow:0 2px 8px rgba(13,74,138,.06);position:relative;overflow:hidden;}
+.kpi::before{content:'';position:absolute;top:0;right:0;left:0;height:3px;background:var(--kc,var(--blue));}
+.kpi .ki{font-size:24px;margin-bottom:5px;}
+.kpi .kn{font-size:25px;font-weight:900;color:var(--navy);line-height:1;}
+.kpi .kl{font-size:11px;color:var(--muted);margin-top:3px;font-weight:700;}
+.card{background:var(--surf);border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:0 2px 8px rgba(13,74,138,.06);margin-bottom:14px;}
+.ct{font-size:14px;font-weight:900;color:var(--navy);margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid var(--bg);display:flex;align-items:center;justify-content:space-between;gap:10px;}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:13px;}
+.tbl th{background:var(--navy);color:#fff;padding:9px 12px;font-size:11px;text-align:right;font-weight:700;}
+.tbl td{padding:9px 12px;border-bottom:1px solid var(--border);}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tr:hover td{background:#f8fcff;}
+.badge{display:inline-block;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:700;}
+.bg{background:#e0f7f0;color:var(--green);}
+.bb{background:#e6f0fb;color:var(--blue);}
+.bo{background:#fff4e0;color:var(--gold);}
+.br{background:#fce8e8;color:var(--red);}
+.bx{background:#f0f0f0;color:#555;}
+.pb{height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
+.pbf{height:100%;border-radius:3px;transition:width .7s ease;}
+
+/* FORM */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.ff{grid-column:1/-1;}
+.fld{display:flex;flex-direction:column;gap:4px;}
+.fld label{font-size:12px;font-weight:700;color:var(--navy);}
+.fld input,.fld select,.fld textarea{border:1.5px solid var(--border);border-radius:10px;padding:8px 12px;font-family:'Cairo',sans-serif;font-size:13px;background:var(--bg);color:var(--text);outline:none;transition:border .2s;width:100%;}
+.fld input:focus,.fld select:focus{border-color:var(--blue);background:#fff;}
+.btn{border:none;border-radius:10px;padding:9px 16px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px;}
+.btn:hover{transform:translateY(-1px);}
+.bp{background:var(--grad);color:#fff;}
+.bt{background:linear-gradient(135deg,var(--teal),#007a7c);color:#fff;}
+.bo2{background:var(--surf);border:1.5px solid var(--border);color:var(--navy);}
+.br2{background:#fce8e8;color:var(--red);border:1.5px solid #f5a5a5;}
+.bs{padding:6px 12px;font-size:12px;}
+
+/* BOOKS */
+.bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px;}
+.bk{background:var(--surf);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(13,74,138,.06);}
+.bk:hover{transform:translateY(-4px);box-shadow:0 10px 24px rgba(13,74,138,.13);border-color:var(--blue);}
+.bc{height:130px;display:flex;align-items:center;justify-content:center;font-size:42px;position:relative;overflow:hidden;}
+.bc img{width:100%;height:100%;object-fit:cover;}
+.bc-ico{position:absolute;font-size:42px;}
+.bvl{position:absolute;top:6px;right:6px;font-size:9px;font-weight:900;padding:2px 6px;border-radius:999px;color:#fff;}
+.bd{position:absolute;bottom:6px;left:6px;background:var(--green);color:#fff;border-radius:999px;padding:2px 7px;font-size:10px;font-weight:700;}
+.bi{padding:10px 11px;}
+.bi-t{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px;line-height:1.3;}
+.bi-a{font-size:10px;color:var(--muted);}
+.bi-s{font-size:10px;color:var(--teal);font-weight:700;margin-top:2px;}
+.bi-btn{width:100%;margin-top:7px;background:var(--grad);color:#fff;border:none;border-radius:8px;padding:7px;font-family:'Cairo',sans-serif;font-size:11px;font-weight:700;cursor:pointer;}
+.bi-btn.dn{background:linear-gradient(135deg,var(--green),#0d8a79);}
+
+/* LEADERBOARD */
+.lbr{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.lbr:last-child{border-bottom:none;}
+.lrk{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0;}
+.r1{background:linear-gradient(135deg,var(--orange),var(--gold));color:#fff;}
+.r2{background:linear-gradient(135deg,#94a3b8,#cbd5e1);color:#1e293b;}
+.r3{background:linear-gradient(135deg,#cd7f32,#d4943a);color:#fff;}
+.rn{background:var(--bg);color:var(--muted);font-size:12px;}
+
+/* EVENTS */
+.ev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+.ev-card{background:var(--surf);border:1.5px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:0 2px 10px rgba(13,74,138,.08);transition:all .22s;}
+.ev-card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(13,74,138,.14);}
+.ev-header{padding:18px 18px 12px;position:relative;}
+.ev-icon{font-size:36px;margin-bottom:8px;}
+.ev-title{font-size:15px;font-weight:900;color:var(--navy);margin-bottom:4px;}
+.ev-org{font-size:11px;color:var(--muted);font-weight:700;}
+.ev-badge{position:absolute;top:16px;left:16px;font-size:10px;font-weight:900;padding:4px 10px;border-radius:999px;}
+.ev-body{padding:0 18px 18px;}
+.ev-dates{font-size:12px;color:var(--gold);font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:5px;}
+.ev-desc{font-size:12px;color:var(--text);line-height:1.7;margin-bottom:12px;}
+.ev-targets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.ev-tag{background:var(--bg);border:1px solid var(--border);border-radius:999px;padding:3px 10px;font-size:10px;font-weight:700;color:var(--muted);}
+.ev-btn{width:100%;background:var(--grad);color:#fff;border:none;border-radius:10px;padding:9px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s;}
+.ev-btn:hover{opacity:.9;}
+
+/* DIGITAL LIBRARIES */
+.dl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:13px;}
+.dl-card{background:var(--surf);border:1.5px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(13,74,138,.06);display:flex;gap:14px;align-items:flex-start;transition:all .2s;}
+.dl-card:hover{border-color:var(--blue);transform:translateY(-2px);}
+.dl-icon{font-size:34px;flex-shrink:0;}
+.dl-info{flex:1;}
+.dl-name{font-size:14px;font-weight:900;color:var(--navy);margin-bottom:4px;}
+.dl-desc{font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:8px;}
+.dl-access{font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;margin-bottom:8px;display:inline-block;}
+.dl-free{background:#e0f7f0;color:var(--green);}
+.dl-acct{background:#fff4e0;color:var(--gold);}
+.dl-btn{display:inline-flex;align-items:center;gap:5px;background:var(--grad);color:#fff;border:none;border-radius:8px;padding:6px 12px;font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;}
+
+/* SCHOOL CARDS */
+.sc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:12px;margin-bottom:16px;}
+.sc-card{background:var(--surf);border:1.5px solid var(--border);border-radius:16px;padding:15px;box-shadow:0 2px 8px rgba(13,74,138,.06);transition:transform .2s;}
+.sc-card:hover{transform:translateY(-2px);}
+.sc-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin:10px 0;}
+.ss{background:var(--bg);border-radius:9px;padding:7px;text-align:center;}
+.ss .sn{font-size:17px;font-weight:900;color:var(--navy);}
+.ss .sl{font-size:10px;color:var(--muted);font-weight:700;}
+
+/* EXCEL */
+.xz{border:2px dashed var(--teal);border-radius:14px;padding:16px;background:linear-gradient(135deg,#f0fbfb,#fff);margin-bottom:13px;}
+.xz-h{font-size:14px;font-weight:900;color:var(--teal);margin-bottom:11px;display:flex;align-items:center;gap:7px;}
+.xdrop{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;border:2px dashed var(--border);border-radius:11px;padding:16px;cursor:pointer;background:#f8fbff;transition:all .2s;text-align:center;}
+.xdrop:hover{border-color:var(--teal);background:#e6f7f7;}
+.xprev{margin-top:9px;display:none;}
+.xplist{max-height:130px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;background:#f8fbff;}
+.xi{padding:6px 11px;border-bottom:1px solid var(--border);font-size:12px;display:flex;gap:8px;align-items:center;}
+.xi:last-child{border-bottom:none;}
+
+/* QUIZ MODAL */
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:500;display:flex;align-items:center;justify-content:center;padding:16px;}
+.modal{background:var(--surf);border-radius:22px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.3);animation:su .25s ease;}
+@keyframes su{from{transform:translateY(24px);opacity:0}}
+.mhdr{background:var(--grad);padding:16px 20px;border-radius:22px 22px 0 0;color:#fff;position:relative;}
+.mhdr h3{font-size:16px;font-weight:900;padding-left:70px;}
+.mhdr p{font-size:12px;opacity:.85;margin-top:2px;}
+.xcbtn{position:absolute;top:10px;left:14px;background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.45);border-radius:8px;padding:5px 13px;color:#fff;font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;cursor:pointer;}
+.ttrack{height:5px;background:rgba(255,255,255,.2);border-radius:3px;margin-top:9px;overflow:hidden;}
+.tfill{height:100%;border-radius:3px;background:#ffe07a;transition:width .1s linear;}
+.mbody{padding:20px;}
+.qn{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:7px;}
+.qt{font-size:15px;font-weight:700;color:var(--navy);line-height:1.6;margin-bottom:13px;}
+.choices{display:flex;flex-direction:column;gap:8px;}
+.ch{width:100%;padding:11px 14px;border:2px solid var(--border);border-radius:11px;background:var(--bg);font-family:'Cairo',sans-serif;font-size:13px;font-weight:600;color:var(--text);text-align:right;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:9px;}
+.ch:hover{border-color:var(--blue);background:#e8f0fb;}
+.ch.sel{border-color:var(--navy);background:var(--navy);color:#fff;}
+.ch.ok{border-color:var(--green);background:#e0f7f0;color:var(--green);}
+.ch.no{border-color:var(--red);background:#fce8e8;color:var(--red);}
+.chl{width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.08);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;flex-shrink:0;}
+.qnxt{width:100%;margin-top:13px;padding:12px;background:var(--grad);color:#fff;border:none;border-radius:11px;font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;}
+.qnxt:disabled{opacity:.4;cursor:not-allowed;}
+.result{text-align:center;padding:26px 18px;}
+.rico{font-size:58px;margin-bottom:10px;animation:bo .5s ease;}
+@keyframes bo{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+.rscore{font-size:48px;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:8px 0;}
+.rpts{background:var(--warm);color:#5a2d00;border-radius:20px;padding:7px 18px;font-size:13px;font-weight:900;display:inline-flex;align-items:center;gap:5px;margin-bottom:13px;}
+
+/* INFO BOX */
+.info{background:#e6f7f7;border:1px solid var(--teal);border-radius:10px;padding:10px 13px;font-size:12px;color:#006b6d;margin-top:9px;line-height:1.7;}
+.warn{background:#fff4e0;border:1px solid var(--gold);border-radius:10px;padding:10px 13px;font-size:12px;color:var(--gold);}
+.danger{background:#fce8e8;border:1px solid #f5a5a5;border-radius:10px;padding:10px 13px;font-size:12px;color:var(--red);}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 22px;border-radius:22px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;z-index:9998;direction:rtl;box-shadow:0 4px 16px rgba(0,0,0,.2);transition:opacity .3s;pointer-events:none;min-width:200px;text-align:center;}
+
+/* RESPONSIVE */
+@media(max-width:800px){
+  .snav{position:fixed;right:-210px;top:58px;bottom:0;z-index:100;transition:right .25s;}
+  .snav.open{right:0;}
+  .krow{grid-template-columns:repeat(2,1fr);}
+  .fg{grid-template-columns:1fr;}
+  .bgrid{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:480px){
+  .sc-grid{grid-template-columns:1fr;}
+  .cnt{padding:12px 10px 40px;}
+  .ev-grid{grid-template-columns:1fr;}
+}
+
+/* ═══ IFRAME BROWSER ═══ */
+.ibrowser{position:fixed;inset:0;z-index:9000;display:none;flex-direction:column;background:#fff;}
+.ibrowser.on{display:flex;}
+.ib-bar{background:var(--grad);height:52px;display:flex;align-items:center;gap:10px;padding:0 14px;flex-shrink:0;box-shadow:0 2px 12px rgba(0,0,0,.2);}
+.ib-back{background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.35);border-radius:8px;padding:6px 14px;color:#fff;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;}
+.ib-back:hover{background:rgba(255,255,255,.25);}
+.ib-home{background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.35);border-radius:8px;padding:6px 14px;color:#fff;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;}
+.ib-home:hover{background:rgba(255,255,255,.25);}
+.ib-url{flex:1;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:6px 12px;color:rgba(255,255,255,.85);font-family:monospace;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;direction:ltr;}
+.ib-open{background:rgba(245,166,35,.3);border:1.5px solid rgba(245,166,35,.5);border-radius:8px;padding:6px 12px;color:#ffe07a;font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;white-space:nowrap;}
+.ib-frame{flex:1;border:none;width:100%;height:100%;}
+.ib-loading{position:absolute;inset:0;background:rgba(255,255,255,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:1;}
+.ib-spin{width:44px;height:44px;border:4px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ib-blocked{position:absolute;inset:52px 0 0;background:#f4f8fd;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:30px;text-align:center;}
+.ib-blocked.show{display:flex;}
+
+</style>
+</head>
+<body>
+
+<button class="home-btn" id="homeBtn" onclick="goHome()">🏠 الرئيسية</button>
+
+<!-- LOGIN -->
+<div class="login-page" id="loginPage" style="display:flex">
+  <div class="login-box">
+    <div class="login-logo">
+      <img id="loginLogo" alt="أكاديمية الفلاح">
+      <div class="ac-name">أكاديميـة الفلاح</div>
+      <div class="ac-sub">Al Falah Academy</div>
+      <div class="plat">📚 منصة الفلاح للقراءة — Falah Reads 2026</div>
+    </div>
+    <div class="lf">
+      <label>دورك في المنصة</label>
+      <select id="lr" onchange="onRole()">
+        <option value="">— اختر الدور —</option>
+        <option value="admin">👑 أدمن — المشرف العام</option>
+        <option value="director">🏫 مدير مدرسة</option>
+        <option value="librarian">📚 أخصائي مكتبة</option>
+        <option value="student">🎒 طالب</option>
+      </select>
+    </div>
+    <div class="lf" id="schDiv" style="display:none">
+      <label>المدرسة</label>
+      <select id="ls"></select>
+    </div>
+    <div class="lf">
+      <label id="codeLabel">كود الدخول</label>
+      <input type="password" id="lc" placeholder="كود الدخول / الرقم الدراسي" onkeypress="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="login-err" id="lerr"></div>
+    <button class="login-btn" onclick="doLogin()">🔐 دخول للمنصة</button>
+    <div class="login-hint">
+      <div class="ht">🔑 أكواد تجريبية:</div>
+      <div class="hr"><span>👑 أدمن</span><code>ADMIN2026</code></div>
+      <div class="hr"><span>🏫 مدير (الخبيصي)</span><code>KHB-DIR-2026</code></div>
+      <div class="hr"><span>📚 أخصائي (الخبيصي)</span><code>KHB-LIB-2026</code></div>
+      <div class="hr"><span>🎒 طالب — الخبيصي</span><code>s1</code> أو <code>s2</code></div>
+      <div class="hn">🎒 باسورد الطالب = رقمه الدراسي | كل مدرسة لها كود خاص</div>
+      <button class="reset-btn" onclick="resetData()">🔄 إعادة تعيين البيانات (عند مشاكل الدخول)</button>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="appShell" style="display:none">
+  <div class="topbar">
+    <div class="tb-brand">
+      <img id="tbLogo" class="tb-logo" alt="الفلاح">
+      <div><div class="tb-name">منصة الفلاح للقراءة</div><div class="tb-sub">Falah Reads 2026</div></div>
+    </div>
+    <div class="tb-sch" id="tbSch">—</div>
+    <div class="tb-right">
+      <div class="tb-pts" id="tbPts">⭐ <span id="tbPtsN">0</span></div>
+      <div class="tb-role" id="tbRole">—</div>
+      <button class="tb-out" onclick="doLogout()">← خروج</button>
+    </div>
+  </div>
+
+  <div class="bwrap">
+    <div class="snav" id="snav">
+      <div class="sn-top">
+        <img id="snavLogo" alt="الفلاح">
+        <div class="sn-name">أكاديمية الفلاح</div>
+      </div>
+      <div id="navItems"></div>
+    </div>
+
+    <div class="cnt" id="mainCnt">
+
+      <!-- ADMIN HOME -->
+      <div class="pg" id="pg-admin-home">
+        <div class="ph"><div class="ph-in">
+          <div class="ph-logo"><img id="ahLogo" alt=""></div>
+          <div class="ph-t"><div class="ph-title">👑 لوحة التحكم — المشرف العام</div><div class="ph-sub">إدارة شاملة لمنصة القراءة بأكاديمية الفلاح</div><div class="ph-stats" id="ahStats"></div></div>
+        </div></div>
+        <div class="krow" id="adminKpis"></div>
+        <div class="sec">🏫 المدارس — التنافس</div>
+        <div class="sc-grid" id="adminSchCards"></div>
+        <div class="sec">📊 ترتيب المدارس</div>
+        <div class="card"><table class="tbl" id="adminCompTbl"></table></div>
+      </div>
+
+      <!-- ADMIN SCHOOLS -->
+      <div class="pg" id="pg-admin-schools">
+        <div class="ph"><div class="ph-in"><div class="ph-t"><div class="ph-title">🏫 إدارة المدارس</div><div class="ph-sub">إضافة أو تعديل أو إيقاف أي مدرسة</div></div></div></div>
+        <div class="card"><div class="ct">المدارس <button class="btn bp bs" onclick="showAddSch()">➕ مدرسة جديدة</button></div>
+          <table class="tbl"><thead><tr><th>المدرسة</th><th>المدينة</th><th>الأخصائي</th><th>الطلاب</th><th>الكتب</th><th>الحالة</th><th>إجراءات</th></tr></thead><tbody id="schTBody"></tbody></table>
+        </div>
+      </div>
+
+      <!-- ADMIN BOOKS -->
+      <div class="pg" id="pg-admin-books">
+        <div class="ph"><div class="ph-in"><div class="ph-t"><div class="ph-title">📚 الكتب العامة</div><div class="ph-sub">متاحة لجميع مدارس الأكاديمية + فلتر المحظورات</div></div></div></div>
+        <div class="xz">
+          <div class="xz-h">📊 رفع قائمة كتب من Excel</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div>
+              <label class="xdrop" ondragover="event.preventDefault();this.style.borderColor='var(--teal)'" ondragleave="this.style.borderColor='var(--border)'" ondrop="onXlsDrop(event,'admin')">
+                <span style="font-size:28px">📊</span>
+                <span style="font-size:13px;font-weight:700;color:var(--navy)">اسحب ملف Excel هنا</span>
+                <span style="font-size:11px;color:var(--muted)">أو اضغط للاختيار</span>
+                <input type="file" id="xlsA" accept=".xlsx,.xls,.csv" style="display:none" onchange="parseXls(this.files[0],'admin')">
+              </label>
+              <div style="display:flex;gap:7px;margin-top:7px">
+                <button class="btn bt bs" style="flex:1" onclick="document.getElementById('xlsA').click()">📊 اختيار Excel</button>
+                <button class="btn bo2 bs" style="flex:1" onclick="dlTemplate()">📥 نموذج فارغ</button>
+              </div>
+            </div>
+            <div style="background:var(--bg);border-radius:11px;padding:11px;font-size:12px">
+              <div style="font-weight:700;color:var(--navy);margin-bottom:7px">📋 أعمدة الملف:</div>
+              <div style="color:var(--muted);line-height:1.8">أ: عنوان | ب: مؤلف | ج: موضوع<br>د: سنة النشر | هـ: المرحلة<br>و: صفحات | ز: رابط رقمي | ح: نقاط</div>
+              <div style="margin-top:7px;padding:6px;background:#fce8e8;border-radius:7px;font-size:11px;color:var(--red)">🚫 يُرفض أي كتاب لمؤلف أو ناشر محظور تلقائياً</div>
+            </div>
+          </div>
+          <div class="xprev" id="xpA">
+            <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:5px" id="xpATitle"></div>
+            <div class="xplist" id="xpAList"></div>
+            <button class="btn bp bs" style="margin-top:7px" onclick="importXls('admin')">✅ إضافة للمكتبة العامة</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ct">➕ إضافة كتاب يدوياً</div>
+          <div class="fg">
+            <div class="fld"><label>عنوان الكتاب *</label><input id="gb-t" placeholder="عنوان الكتاب..."></div>
+            <div class="fld"><label>المؤلف *</label><input id="gb-a" placeholder="اسم المؤلف..."></div>
+            <div class="fld"><label>موضوع الكتاب</label>
+              <select id="gb-s"><option>قصص وروايات</option><option>شعر وأدب</option><option>سيرة وتاريخ</option><option>ديني قصصي</option><option>علوم وطبيعة</option><option>وطني إماراتي</option><option>رياضيات ومنطق</option><option>جغرافيا ورحلات</option><option>فنون وإبداع</option><option>تقنية وابتكار</option></select></div>
+            <div class="fld"><label>سنة النشر</label><input id="gb-y" type="number" placeholder="2020"></div>
+            <div class="fld"><label>المرحلة</label>
+              <select id="gb-l"><option>KG — مرحلة الروضة</option><option>الحلقة الأولى (الصف 1-5)</option><option>الحلقة الثانية (الصف 6-8)</option><option>الحلقة الثالثة (الصف 9-12)</option><option>جميع المراحل</option></select></div>
+            <div class="fld"><label>صفحات</label><input id="gb-p" type="number" placeholder="120"></div>
+            <div class="fld"><label>دار النشر</label><input id="gb-pub" placeholder="اسم دار النشر..."></div>
+            <div class="fld"><label>النقاط</label><input id="gb-pt" type="number" value="30"></div>
+            <div class="fld ff"><label>رابط رقمي (اختياري)</label><input id="gb-lk" placeholder="https://..."></div>
+            <div class="fld ff"><label>رابط صورة الغلاف (اختياري)</label><input id="gb-img" placeholder="https://... أو اتركه فارغاً"></div>
+          </div>
+          <button class="btn bp" style="margin-top:11px" onclick="addGBook()">➕ إضافة للمكتبة العامة</button>
+        </div>
+        <div class="sec">الكتب العامة المضافة</div>
+        <div class="bgrid" id="gbGrid"></div>
+      </div>
+
+      <!-- EVENTS PAGE -->
+      <div class="pg" id="pg-events">
+        <div class="ph"><div class="ph-in">
+          <div class="ph-logo"><img id="evLogo" alt=""></div>
+          <div class="ph-t"><div class="ph-title">🏆 الفعاليات والمسابقات القرائية</div><div class="ph-sub">فعاليات القراءة في الإمارات — شارك وتميّز</div></div>
+        </div></div>
+        <div class="sec">🌟 الفعاليات الكبرى</div>
+        <div class="ev-grid" id="evGrid"></div>
+      </div>
+
+      <!-- DIGITAL LIBRARIES -->
+      <div class="pg" id="pg-digital">
+        <div class="ph"><div class="ph-in"><div class="ph-t"><div class="ph-title">📱 المكتبات الرقمية</div><div class="ph-sub">روابط موثوقة للكتب الإلكترونية المناسبة للمدارس</div></div></div></div>
+        <div class="sec">📚 مكتبات مجانية</div>
+        <div class="dl-grid" id="dlFreeGrid"></div>
+        <div class="sec">🔐 مكتبات تحتاج حساباً مدرسياً</div>
+        <div class="dl-grid" id="dlAcctGrid"></div>
+      </div>
+
+      <!-- LIB HOME -->
+      <div class="pg" id="pg-lib-home">
+        <div class="ph"><div class="ph-in">
+          <div class="ph-logo"><img id="lhLogo" alt=""></div>
+          <div class="ph-t"><div class="ph-title" id="libTitle">لوحة الأخصائي</div><div class="ph-sub">متابعة برنامج القراءة وتشجيع الطلاب</div><div class="ph-stats" id="lhStats"></div></div>
+        </div></div>
+        <div class="krow" id="libKpis"></div>
+        <div class="sec">📋 الطلاب الأكثر نشاطاً</div>
+        <div class="card"><table class="tbl"><thead><tr><th>الطالب</th><th>الصف</th><th>كتب</th><th>نقاط</th><th>التقدم</th><th>الدرجة</th></tr></thead><tbody id="libSBody"></tbody></table></div>
+      </div>
+
+      <!-- LIB BOOKS -->
+      <div class="pg" id="pg-lib-books">
+        <div class="ph"><div class="ph-in"><div class="ph-t"><div class="ph-title">📚 كتب مدرستك</div><div class="ph-sub">أضف كتباً خاصة + تصفح الكتب العامة</div></div></div></div>
+        <div class="xz">
+          <div class="xz-h">📊 رفع قائمة كتب (خاصة بمدرستك)</div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <label class="xdrop" style="flex:1;flex-direction:row;gap:9px;padding:11px" ondragover="event.preventDefault()" ondrop="onXlsDrop(event,'lib')">
+              <span style="font-size:24px">📊</span>
+              <div><div style="font-size:13px;font-weight:700;color:var(--navy)">رفع Excel</div><div style="font-size:11px;color:var(--muted)">عنوان|مؤلف|موضوع|سنة|المرحلة|صفحات|رابط|نقاط</div></div>
+              <input type="file" id="xlsL" accept=".xlsx,.xls,.csv" style="display:none" onchange="parseXls(this.files[0],'lib')">
+            </label>
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <button class="btn bt bs" onclick="document.getElementById('xlsL').click()">📊 اختيار</button>
+              <button class="btn bo2 bs" onclick="dlTemplate()">📥 نموذج</button>
+            </div>
+          </div>
+          <div class="xprev" id="xpL">
+            <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:5px" id="xpLTitle"></div>
+            <div class="xplist" id="xpLList"></div>
+            <button class="btn bp bs" style="margin-top:7px" onclick="importXls('lib')">✅ إضافة لمكتبة مدرستك</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ct">➕ إضافة كتاب يدوياً</div>
+          <div class="fg">
+            <div class="fld"><label>عنوان الكتاب *</label><input id="lb-t" placeholder="عنوان الكتاب..."></div>
+            <div class="fld"><label>المؤلف *</label><input id="lb-a" placeholder="اسم المؤلف..."></div>
+            <div class="fld"><label>موضوع الكتاب</label><select id="lb-s"><option>قصص وروايات</option><option>شعر وأدب</option><option>سيرة وتاريخ</option><option>ديني قصصي</option><option>علوم وطبيعة</option><option>وطني إماراتي</option><option>رياضيات ومنطق</option><option>جغرافيا ورحلات</option><option>فنون وإبداع</option><option>تقنية وابتكار</option></select></div>
+            <div class="fld"><label>سنة النشر</label><input id="lb-y" type="number" placeholder="2020"></div>
+            <div class="fld"><label>المرحلة</label><select id="lb-l"><option>KG — مرحلة الروضة</option><option>الحلقة الأولى (الصف 1-5)</option><option>الحلقة الثانية (الصف 6-8)</option><option>الحلقة الثالثة (الصف 9-12)</option><option>جميع المراحل</option></select></div>
+            <div class="fld"><label>صفحات</label><input id="lb-p" type="number" placeholder="120"></div>
+            <div class="fld"><label>دار النشر</label><input id="lb-pub" placeholder="اسم دار النشر..."></div>
+            <div class="fld"><label>النقاط</label><input id="lb-pt" type="number" value="30"></div>
+            <div class="fld ff"><label>رابط رقمي</label><input id="lb-lk" placeholder="https://hindawi.org/..."></div>
+            <div class="fld ff"><label>رابط صورة الغلاف (اختياري)</label><input id="lb-img" placeholder="https://..."></div>
+          </div>
+          <div class="info" style="margin-top:9px">💡 كتب رقمية مجانية: <a href="https://ar.library.dctabudhabi.ae" target="_blank" style="color:var(--blue);font-weight:700">مكتبة أبوظبي</a> | <a href="https://www.hindawi.org" target="_blank" style="color:var(--blue);font-weight:700">هنداوي</a> | <a href="https://catalog.shjlib.gov.ae" target="_blank" style="color:var(--blue);font-weight:700">مكتبة الشارقة</a></div>
+          <button class="btn bp" style="margin-top:11px" onclick="addSBook()">➕ إضافة لمكتبة مدرستك</button>
+        </div>
+        <div class="sec">📖 كتب مدرستك الخاصة</div>
+        <div class="bgrid" id="sbGrid"></div>
+        <div class="sec">🌐 الكتب العامة (من الأدمن)</div>
+        <div class="bgrid" id="gbLibGrid"></div>
+      </div>
+
+      <!-- LIB STUDENTS -->
+      <div class="pg" id="pg-lib-students">
+        <div class="ph"><div class="ph-in"><div class="ph-t"><div class="ph-title">👥 إدارة الطلاب</div><div class="ph-sub">تسجيل ومتابعة طلاب مكتبتك</div></div></div></div>
+        <div class="card">
+          <div class="ct">تسجيل طالب جديد</div>
+          <div class="fg">
+            <div class="fld"><label>اسم الطالب *</label><input id="ns-n" placeholder="الاسم الكامل..."></div>
+            <div class="fld"><label>الرقم الدراسي * (= كلمة مروره)</label><input id="ns-id" placeholder="مثال: 10042"></div>
+            <div class="fld"><label>الصف</label><select id="ns-g"><option>KG — الروضة</option><option>الصف الأول</option><option>الصف الثاني</option><option>الصف الثالث</option><option>الصف الرابع</option><option>الصف الخامس</option><option>الصف السادس</option><option>الصف السابع</option><option>الصف الثامن</option><option>الصف التاسع</option><option>الصف العاشر</option><option>الصف الحادي عشر</option><option>الصف الثاني عشر</option></select></div>
+            <div class="fld"><label>الفصل</label><input id="ns-c" placeholder="أ / ب / ج"></div>
+          </div>
+          <div class="warn" style="margin-top:9px">🔑 <strong>الرقم الدراسي = باسورد الطالب</strong> — تأكد من صحته</div>
+          <button class="btn bp" style="margin-top:11px" onclick="addStudent()">➕ تسجيل الطالب</button>
+        </div>
+        <div class="sec">قائمة الطلاب</div>
+        <div class="card"><table class="tbl"><thead><tr><th>الطالب</th><th>الصف</th><th>الرقم</th><th>كتب</th><th>نقاط</th><th>الدرجة</th><th>التقدم</th></tr></thead><tbody id="allSBody"></tbody></table></div>
+      </div>
+
+      <!-- STUDENT HOME -->
+      <div class="pg" id="pg-stu-home">
+        <div class="ph">
+          <div class="ph-in">
+            <div class="ph-logo"><img id="shLogo" alt=""></div>
+            <div class="ph-t" style="flex:1">
+              <div class="ph-title" id="stuTitle">مرحباً! 👋</div>
+              <div class="ph-sub">واصل رحلة القراءة واجمع النقاط</div>
+              <div class="ph-stats" id="stuStats"></div>
+            </div>
+            <div style="text-align:center;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.25);border-radius:14px;padding:12px 16px;flex-shrink:0">
+              <div style="font-size:30px" id="stuRI">📚</div>
+              <div style="font-size:11px;color:#ffe07a;font-weight:700;margin-top:4px" id="stuRN">قارئ ناشئ</div>
+            </div>
+          </div>
+          <div class="ph-bar">
+            <div class="ph-bar-row"><span id="stuGL">التقدم نحو القارئ الذهبي</span><span id="stuGP">0%</span></div>
+            <div class="ph-btrack"><div class="ph-bfill" id="stuGB" style="width:0%"></div></div>
+          </div>
+        </div>
+        <div class="sec">📚 الكتب المتاحة لك</div>
+        <div class="bgrid" id="stuBGrid"></div>
+        <div class="sec">🏆 لوحة الشرف</div>
+        <div class="card" id="stuLb"></div>
+      </div>
+
+      <!-- STUDENT PROFILE -->
+      <div class="pg" id="pg-stu-profile">
+        <div class="ph"><div class="ph-in"><div class="ph-t"><div class="ph-title">📋 ملفي الشخصي</div><div class="ph-sub">سجل قراءتي وإنجازاتي</div></div></div></div>
+        <div id="stuProf"></div>
+      </div>
+
+
+      <!-- CURATED DIGITAL BOOKS -->
+      <div class="pg" id="pg-curated">
+        <div class="ph"><div class="ph-in"><div class="ph-t">
+          <div class="ph-title">📚 الكتب الرقمية المعتمدة</div>
+          <div class="ph-sub">كتب تم التحقق منها مسبقاً — آمنة ومناسبة لطلاب المدارس</div>
+        </div></div></div>
+        <div class="sec">🔍 تصفح حسب المرحلة</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px" id="curatedFilter">
+          <button class="btn bp bs" onclick="filterCurated('all')">الكل</button>
+          <button class="btn bo2 bs" onclick="filterCurated('KG')">KG الروضة</button>
+          <button class="btn bo2 bs" onclick="filterCurated('الأولى')">الحلقة الأولى</button>
+          <button class="btn bo2 bs" onclick="filterCurated('الثانية')">الحلقة الثانية</button>
+          <button class="btn bo2 bs" onclick="filterCurated('الثالثة')">الحلقة الثالثة</button>
+          <button class="btn bo2 bs" onclick="filterCurated('جميع')">جميع المراحل</button>
+        </div>
+        <div class="bgrid" id="curatedGrid"></div>
+      </div>
+
+
+      <!-- GITHUB + SUPABASE GUIDE -->
+      <div class="pg" id="pg-admin-deploy">
+        <div class="ph"><div class="ph-in"><div class="ph-t">
+          <div class="ph-title">🚀 رفع المنصة — GitHub + Supabase</div>
+          <div class="ph-sub">دليل الربط بالخادم وقاعدة البيانات</div>
+        </div></div></div>
+
+        <!-- STEP 1: GitHub -->
+        <div class="card">
+          <div class="ct" style="color:var(--navy)">
+            <span>🐙 الخطوة الأولى — رفع المنصة على GitHub Pages</span>
+            <span class="badge bb">مجاني</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div>
+              <div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:10px">الخطوات:</div>
+              <div style="font-size:13px;line-height:2;color:var(--text)">
+                ١. اذهب إلى <a href="https://github.com" onclick="safeOpenInBrowser('https://github.com','GitHub');return false" style="color:var(--blue);font-weight:700">github.com</a> وسجّل دخول<br>
+                ٢. اضغط <strong>New Repository</strong><br>
+                ٣. اسم المشروع: <code style="background:#f0f5fc;padding:2px 7px;border-radius:4px">falah-reads</code><br>
+                ٤. اختر: <strong>Public</strong><br>
+                ٥. اضغط <strong>Create Repository</strong><br>
+                ٦. ارفع الملف وغيّر اسمه إلى: <code style="background:#f0f5fc;padding:2px 7px;border-radius:4px">index.html</code><br>
+                ٧. اذهب إلى <strong>Settings → Pages</strong><br>
+                ٨. اختر Branch: <strong>main → Save</strong>
+              </div>
+            </div>
+            <div style="background:var(--bg);border-radius:12px;padding:14px">
+              <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">✅ النتيجة:</div>
+              <div style="font-family:monospace;font-size:12px;background:#0d4a8a;color:#ffe07a;padding:10px;border-radius:8px;line-height:1.8">
+                https://[اسمك].github.io/falah-reads/<br>
+                <span style="color:rgba(255,255,255,.6);font-size:10px">رابط دائم مجاني — يعمل على كل الأجهزة</span>
+              </div>
+              <div style="margin-top:10px;font-size:12px;color:var(--muted);line-height:1.7">
+                📌 عند أي تعديل: ارفع الملف الجديد وسيتحدث خلال دقيقتين
+              </div>
+              <div id="supaStatus" style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px">⏳ جاري فحص الاتصال...</div>
+              <div style="display:flex;gap:8px;margin-top:10px">
+                <input id="supaKeyInput" type="password" placeholder="أدخل Supabase anon key..." 
+                  style="flex:1;border:1.5px solid var(--border);border-radius:10px;padding:8px 12px;font-family:monospace;font-size:12px;background:var(--bg)">
+                <button class="btn bp bs" onclick="activateSupabase()">🔌 تفعيل</button>
+              </div>
+              <div style="margin-top:6px;font-size:11px;color:var(--muted)">
+                المفتاح يُحفظ في المتصفح — Supabase URL: <code style="font-size:10px">nmbbahzzogspuuvpsxud.supabase.co</code>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: Supabase -->
+        <div class="card">
+          <div class="ct" style="color:var(--navy)">
+            <span>🗄️ الخطوة الثانية — ربط قاعدة البيانات Supabase</span>
+            <span class="badge bg">مجاني حتى 500MB</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div>
+              <div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:10px">الخطوات:</div>
+              <div style="font-size:13px;line-height:2;color:var(--text)">
+                ١. اذهب إلى <a href="https://supabase.com" onclick="safeOpenInBrowser('https://supabase.com','Supabase');return false" style="color:var(--blue);font-weight:700">supabase.com</a><br>
+                ٢. <strong>New Project</strong> → اسمه: <code style="background:#f0f5fc;padding:2px 7px;border-radius:4px">falah-reads</code><br>
+                ٣. اختر المنطقة: <strong>Middle East (Bahrain)</strong><br>
+                ٤. اذهب إلى <strong>Settings → API</strong><br>
+                انسخ: <strong>anon public key</strong><br>
+                ٥. اضغط زر التفعيل أدناه وأدخل المفتاح
+              </div>
+            </div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">الجداول التي ستُنشأ:</div>
+              <table style="width:100%;font-size:12px;border-collapse:collapse">
+                <tr style="background:var(--navy);color:#fff"><th style="padding:6px;text-align:right">الجدول</th><th style="padding:6px;text-align:right">البيانات</th></tr>
+                <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">schools</td><td style="padding:6px;color:var(--muted)">المدارس الست + كلمات المرور</td></tr>
+                <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">books</td><td style="padding:6px;color:var(--muted)">الكتب + الأغلفة + الروابط</td></tr>
+                <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">students</td><td style="padding:6px;color:var(--muted)">الطلاب + بيانات القراءة</td></tr>
+                <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">test_results</td><td style="padding:6px;color:var(--muted)">نتائج الاختبارات</td></tr>
+                <tr><td style="padding:6px">events_reg</td><td style="padding:6px;color:var(--muted)">تسجيل الفعاليات</td></tr>
+              </table>
+            </div>
+          </div>
+          <div style="margin-top:14px;background:#e6f0fb;border-radius:10px;padding:12px;font-size:12px;color:var(--navy)">
+            ⚡ <strong>الفرق بعد Supabase:</strong> كل جهاز يرى نفس البيانات — الأخصائية تسجّل طالباً من مكتبتها ويظهر فوراً عند الطالب على جهازه
+          </div>
+        </div>
+
+        <!-- Comparison -->
+        <div class="card">
+          <div class="ct">📊 الفرق بين الوضع الحالي وبعد الربط</div>
+          <table style="width:100%;font-size:13px;border-collapse:collapse;text-align:center">
+            <tr style="background:var(--bg)"><td style="padding:10px;text-align:right;font-weight:700">الميزة</td><th style="padding:10px;color:var(--muted)">الآن (localStorage)</th><th style="padding:10px;color:var(--navy)">بعد Supabase</th></tr>
+            <tr style="border-top:1px solid var(--border)"><td style="padding:10px;text-align:right">حفظ البيانات</td><td style="padding:10px;color:var(--red)">جهاز واحد فقط ❌</td><td style="padding:10px;color:var(--green)">كل الأجهزة ✅</td></tr>
+            <tr style="border-top:1px solid var(--border);background:var(--bg)"><td style="padding:10px;text-align:right">تزامن بين المدارس</td><td style="padding:10px;color:var(--red)">غير متاح ❌</td><td style="padding:10px;color:var(--green)">فوري ✅</td></tr>
+            <tr style="border-top:1px solid var(--border)"><td style="padding:10px;text-align:right">أغلفة الكتب</td><td style="padding:10px;color:var(--red)">روابط خارجية فقط ❌</td><td style="padding:10px;color:var(--green)">صور محفوظة ✅</td></tr>
+            <tr style="border-top:1px solid var(--border);background:var(--bg)"><td style="padding:10px;text-align:right">النسخ الاحتياطي</td><td style="padding:10px;color:var(--red)">لا يوجد ❌</td><td style="padding:10px;color:var(--green)">تلقائي ✅</td></tr>
+            <tr style="border-top:1px solid var(--border)"><td style="padding:10px;text-align:right">التكلفة</td><td style="padding:10px;color:var(--green)">مجاني ✅</td><td style="padding:10px;color:var(--green)">مجاني (500MB) ✅</td></tr>
+          </table>
+        </div>
+
+      </div>
+
+      <!-- DIRECTOR HOME -->
+      <div class="pg" id="pg-dir-home">
+        <div class="ph"><div class="ph-in">
+          <div class="ph-logo"><img id="dhLogo" alt=""></div>
+          <div class="ph-t"><div class="ph-title" id="dirTitle">تقرير القراءة</div><div class="ph-sub">متابعة برنامج القراءة في مدرستك</div></div>
+        </div></div>
+        <div class="krow" id="dirKpis"></div>
+        <div class="sec">أداء الطلاب</div>
+        <div class="card"><table class="tbl"><thead><tr><th>الطالب</th><th>الصف</th><th>كتب</th><th>نقاط</th><th>الدرجة المقترحة</th></tr></thead><tbody id="dirSBody"></tbody></table></div>
+      </div>
+
+    </div><!-- /cnt -->
+  </div><!-- /bwrap -->
+</div><!-- /app -->
+
+<!-- QUIZ MODAL -->
+<div class="mbg" id="quizModal" style="display:none">
+  <div class="modal" id="quizInner"></div>
+</div>
+
+<!-- ADD SCHOOL MODAL -->
+<div class="mbg" id="addSchModal" style="display:none" onclick="if(event.target===this)closeAddSch()">
+  <div class="modal">
+    <div class="mhdr"><h3>🏫 إضافة مدرسة / مكتبة جديدة</h3><p>تُضاف فوراً للمنصة</p></div>
+    <div class="mbody">
+      <div class="fg">
+        <div class="fld"><label>اسم المدرسة *</label><input id="as-n" placeholder="مثال: فرع الشهامة"></div>
+        <div class="fld"><label>المدينة / الإمارة *</label><input id="as-c" placeholder="أبوظبي / العين"></div>
+        <div class="fld"><label>رمز المدرسة * (لاتيني)</label><input id="as-code" placeholder="SHA" maxlength="5" oninput="this.value=this.value.toUpperCase();autoP(this.value)"></div>
+        <div class="fld"><label>أيقونة</label><input id="as-ico" placeholder="🏫" maxlength="4"></div>
+        <div class="fld"><label>اسم أخصائي المكتبة</label><input id="as-lib" placeholder="الاسم الكامل..."></div>
+        <div class="fld"><label>كلمة مرور الأخصائي</label><input id="as-lp" placeholder="تُملأ تلقائياً..."></div>
+        <div class="fld"><label>اسم مدير المدرسة</label><input id="as-dir" placeholder="الاسم الكامل..."></div>
+        <div class="fld"><label>كلمة مرور المدير</label><input id="as-dp" placeholder="تُملأ تلقائياً..."></div>
+      </div>
+      <div class="info" style="margin-top:9px">🔐 الأكواد تُملأ تلقائياً عند كتابة الرمز — يمكنك تعديلها<br>🎒 باسورد الطالب = رقمه الدراسي تلقائياً</div>
+      <div style="display:flex;gap:9px;margin-top:13px">
+        <button class="btn bp" onclick="addSchool()" style="flex:1">✅ إضافة المدرسة</button>
+        <button class="btn bo2" onclick="closeAddSch()">إلغاء</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" style="opacity:0"></div>
+
+<script>
+// ════════════════════════════════════════════════════
+//  LOGO (embedded base64 — no external file needed)
+// ════════════════════════════════════════════════════
+const LOGO_SRC = 'data:image/png;base64,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';
+
+function setAllLogos() {
+  var ids = ['loginLogo','tbLogo','snavLogo','ahLogo','evLogo','lhLogo','shLogo','dhLogo'];
+  ids.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.src = LOGO_SRC;
+  });
+}
+
+// ════════════════════════════════════════════════════
+//  BANNED AUTHORS / PUBLISHERS (وزارة التربية 2025)
+// ════════════════════════════════════════════════════
+const BANNED_AUTHORS = [
+  'ابراهيم الدرويش','ابوالحسن الندوي','ابوعلي املودودي','احمد الريسوني','احمد العسال',
+  'ادهم الشرقاوي','راغب السرجاني','راشد الغنوشي','زينب الغزالي','سعيد حوى',
+  'سيد قطب','طارق السويدان','عائض القرني','عبدالحميد كشك','عبدالقادر عودة',
+  'عمرو خالد','محمد العريفي','محمد الغزالي','محمد قطب','يوسف القرضاوي',
+  'حسن البنا','مالك بن نبي','سام هاريس','ريتشارد داوكنز','كريستوفر هيتشنز',
+  'فرج فودة','جمال البنا','عمر عبدالكافي','محمد حسان','وجدي غنيم'
+];
+
+const BANNED_PUBLISHERS = [
+  'دار الشروق','دار ابن حزم','دار الكلمة','دار البشائر','دار الفكر',
+  'دار السالم','دار الدعوة','دار النفائس','مكتبة وهبة','دار الصحوة',
+  'دار الفتح','دار البيارق','دار الرسالة','دار اإليمان','مؤسسة الرسالة'
+];
+
+const BANNED_BOOKS = [
+  'الجهاد','نهاية الايمان','وهم الله','الله ليس عظيما','نفي الالهوت',
+  'الالحاد','داعش','الدولة اإلسالمية','فتاوى معاصرة'
+];
+
+function checkBanned(title, author, publisher) {
+  var t = (title||'').toLowerCase();
+  var a = (author||'').toLowerCase();
+  var p = (publisher||'').toLowerCase();
+  
+  for (var i = 0; i < BANNED_AUTHORS.length; i++) {
+    if (a.includes(BANNED_AUTHORS[i].toLowerCase())) {
+      return { banned: true, reason: 'المؤلف محظور: ' + BANNED_AUTHORS[i] };
+    }
+  }
+  for (var i = 0; i < BANNED_PUBLISHERS.length; i++) {
+    if (p.includes(BANNED_PUBLISHERS[i].toLowerCase())) {
+      return { banned: true, reason: 'الناشر محظور: ' + BANNED_PUBLISHERS[i] };
+    }
+  }
+  for (var i = 0; i < BANNED_BOOKS.length; i++) {
+    if (t.includes(BANNED_BOOKS[i].toLowerCase())) {
+      return { banned: true, reason: 'الكتاب في قائمة المحظورات: ' + BANNED_BOOKS[i] };
+    }
+  }
+  return { banned: false };
+}
+
+// ════════════════════════════════════════════════════
+//  EVENTS DATA
+// ════════════════════════════════════════════════════
+const EVENTS = [
+  {
+    id: 'arc', icon: '🏆', title: 'تحدي القراءة العربي',
+    org: 'مبادرة الشيخ محمد بن راشد — دبي', color: '#0d4a8a',
+    status: 'نشطة', statusColor: '#0a6b52', statusBg: '#e0f7f0',
+    dates: 'سبتمبر 2025 — أبريل 2026',
+    desc: 'مبادرة وطنية كبرى تهدف لتحفيز الطلاب على قراءة 50 كتاباً خلال العام الدراسي. يحصل الطالب على جواز قراءة ويلخص كل كتاب في صفحة واحدة.',
+    targets: ['الحلقة الأولى','الحلقة الثانية','الحلقة الثالثة'],
+    link: 'https://books.arabreadingchallenge.com/ar/login',
+    steps: ['تسجيل الطالب عبر أخصائية المكتبة','استلام جواز القراءة (5 جوازات)','قراءة الكتاب وتلخيصه في صفحة','التصفيات: مدرسة → منطقة → دولة → إقليمي']
+  },
+  {
+    id: 'kutubee', icon: '📱', title: 'مسابقة كتبي للقراءة',
+    org: 'وزارة التربية والتعليم — الإمارات', color: '#00b4b6',
+    status: 'نشطة', statusColor: '#0a6b52', statusBg: '#e0f7f0',
+    dates: '1 مارس — 30 أبريل 2026',
+    desc: 'مسابقة عبر منصة كتبي الإلكترونية تستهدف تعزيز القراءة باللغة العربية. تُحتسب الكتب المقروءة منذ سبتمبر 2025.',
+    targets: ['الصف الأول — الثامن','المدارس الحكومية'],
+    link: 'https://portal.moeae.kutubee.com',
+    steps: ['التسجيل عبر أخصائية المكتبة على منصة كتبي','قراءة أكبر عدد ممكن من الكتب العربية','حل التحدي في نهاية كل كتاب','الفائز: أفضل 5 طلاب + 5 معلمين + 5 مدارس']
+  },
+  {
+    id: 'creative', icon: '✍️', title: 'مسابقة القارئ المبدع',
+    org: 'أكاديمية الفلاح — الدانة', color: '#f5a623',
+    status: 'منتهية', statusColor: '#b83232', statusBg: '#fce8e8',
+    dates: '1 يناير — 30 مارس 2026',
+    desc: 'مسابقة تعزّز مهارات القراءة والتفكير التحليلي. يقرأ الطالب أكبر عدد من الكتب ويعبّر عنها بأساليب إبداعية.',
+    targets: ['رياض الأطفال','الحلقة الأولى','الحلقة الثانية'],
+    link: '#',
+    steps: ['قراءة أكبر عدد من الكتب','تعبئة كتيّب المسابقة بالكتب المقروءة','حضور مقابلة شخصية مع الأخصائية','تسليم الكتيّب لأخصائية مصادر التعلم']
+  },
+  {
+    id: 'changed', icon: '📖', title: 'الكتاب الذي غيّرني',
+    org: 'أكاديمية الفلاح — الدانة | اليوم العالمي للكتاب', color: '#4c1d95',
+    status: 'نشطة', statusColor: '#0a6b52', statusBg: '#e0f7f0',
+    dates: '23 أبريل 2026 (اليوم العالمي للكتاب)',
+    desc: 'مسابقة يعبّر فيها الطالب عن كتاب أثّر فيه ويوضح كيف غيّره. الطالب يكتب موضوعاً منظماً لا يقل عن 100 كلمة.',
+    targets: ['جميع المراحل'],
+    link: '#',
+    steps: ['كتابة موضوع عن الكتاب الذي غيّرك (100+ كلمة)','تضمين: مقدمة + ملخص + تأثير + توصية','تسليم المشاركة يدوياً لمكتبة المدرسة','التكريم في طابور الصباح بجوائز عينية']
+  },
+  {
+    id: 'journey', icon: '🌍', title: 'مبادرة رحلة قارئ',
+    org: 'أكاديمية الفلاح — الدانة | شهر القراءة', color: '#0d8a79',
+    status: 'منتهية', statusColor: '#b83232', statusBg: '#fce8e8',
+    dates: '23 مارس — 23 أبريل 2026',
+    desc: 'مبادرة تنمّي حب القراءة وتعزز التفكير الإبداعي. الطالب يختار كتاباً مناسباً لمرحلته ويقدّم ناتجاً واحداً من اختياره.',
+    targets: ['جميع المراحل'],
+    link: '#',
+    steps: ['اختيار كتاب هادف مناسب للمرحلة العمرية','تقديم ناتج: ملخص / غلاف جديد / نهاية مبتكرة','إرسال المشاركة عبر تطبيق تيليجرام للأخصائية','ربط الكتاب بقيمة مجتمعية أو إماراتية']
+  },
+  {
+    id: 'bigbook', icon: '📝', title: 'الكاتب الصغير في الكتاب الكبير',
+    org: 'معرض الكتاب — النسخة الثالثة عشرة', color: '#e8941a',
+    status: 'قادمة', statusColor: '#7a4e00', statusBg: '#fff4e0',
+    dates: 'تُعلَن لاحقاً',
+    desc: 'مسابقة تدعو الطلاب لمشاركة قصة عن حكمة الوالد أو ذكرياته. يُختار أفضل القصص لتُنشر في كتاب جماعي.',
+    targets: ['جميع الأعمار'],
+    link: '#',
+    steps: ['كتابة قصة عن حكمة الوالد أو ذكرياته','تسليم القصة لمكتبة المدرسة','الأعمال المتميزة تُنشر في الكتاب الكبير','التكريم في حفل خاص']
+  },
+];
+
+// ════════════════════════════════════════════════════
+//  DIGITAL LIBRARIES DATA
+// ════════════════════════════════════════════════════
+const DL_FREE = [
+  { icon:'🏛️', name:'مكتبة أبوظبي الرقمية', desc:'آلاف الكتب والمصادر الرقمية من دائرة الثقافة والسياحة أبوظبي', link:'https://ar.library.dctabudhabi.ae' },
+  { icon:'📚', name:'مكتبة الشارقة العامة', desc:'كتالوج رقمي شامل لمكتبة الشارقة مع إمكانية البحث والاستعارة', link:'https://catalog.shjlib.gov.ae/en/' },
+  { icon:'🏺', name:'التراث الثقافي الإماراتي', desc:'موقع ICH — مصادر التراث الثقافي غير المادي في الإمارات', link:'https://ich.ae/ar' },
+  { icon:'📖', name:'هنداوي للنشر', desc:'أكثر من 6000 كتاب عربي مجاني في الأدب والعلوم والتاريخ', link:'https://www.hindawi.org' },
+  { icon:'🌐', name:'مكتبة الإنترنت العامة', desc:'Archive.org — ملايين الكتب العربية والعالمية مجاناً', link:'https://archive.org' },
+];
+const DL_ACCT = [
+  { icon:'🐝', name:'منصة كتبي (وزارة التربية)', desc:'منصة رسمية للمدارس الحكومية — تحتاج حساباً من الوزارة عبر أخصائية المكتبة', link:'https://portal.moeae.kutubee.com' },
+  { icon:'🏆', name:'تحدي القراءة العربي', desc:'مكتبة رقمية خاصة بمبادرة تحدي القراءة — تسجيل عبر المدرسة', link:'https://books.arabreadingchallenge.com/ar/login' },
+  { icon:'📱', name:'مكتبة قوقل المشتركة', desc:'قوائم كتب مقترحة مشتركة عبر Google Drive للمعلمين والأخصائيين', link:'https://share.google/VcaPmAxvUiFVBrtLv' },
+  { icon:'📂', name:'موارد القراءة المشتركة', desc:'ملفات ومصادر القراءة المشتركة من أخصائيات أكاديمية الفلاح', link:'https://share.google/LjF1ZZaRzxbO7Viy2' },
+];
+
+
+// ════════════════════════════════════════════════════════
+//  SUPABASE CONFIG
+//  ← أدخل الـ anon key من: Supabase → Settings → API
+// ════════════════════════════════════════════════════════
+var SUPA_URL = 'https://nmbbahzzogspuuvpsxud.supabase.co';
+var SUPA_KEY = 'YOUR_ANON_KEY_HERE'; // ← ضع مفتاحك هنا
+
+var supaEnabled = (SUPA_KEY !== 'YOUR_ANON_KEY_HERE');
+
+// ── Supabase helper ──────────────────────────────────────
+var SB = {
+  _h: function() {
+    return {
+      'Content-Type': 'application/json',
+      'apikey': SUPA_KEY,
+      'Authorization': 'Bearer ' + SUPA_KEY
+    };
+  },
+  get: async function(table, filters) {
+    if (!supaEnabled) return null;
+    var url = SUPA_URL + '/rest/v1/' + table + '?select=*';
+    if (filters) url += '&' + filters;
+    var r = await fetch(url, {headers: SB._h()});
+    if (!r.ok) return null;
+    return await r.json();
+  },
+  post: async function(table, data) {
+    if (!supaEnabled) return null;
+    var r = await fetch(SUPA_URL + '/rest/v1/' + table, {
+      method: 'POST',
+      headers: Object.assign({'Prefer':'return=representation'}, SB._h()),
+      body: JSON.stringify(data)
+    });
+    if (!r.ok) return null;
+    return await r.json();
+  },
+  patch: async function(table, filter, data) {
+    if (!supaEnabled) return null;
+    var r = await fetch(SUPA_URL + '/rest/v1/' + table + '?' + filter, {
+      method: 'PATCH',
+      headers: Object.assign({'Prefer':'return=representation'}, SB._h()),
+      body: JSON.stringify(data)
+    });
+    if (!r.ok) return null;
+    return await r.json();
+  },
+  del: async function(table, filter) {
+    if (!supaEnabled) return null;
+    var r = await fetch(SUPA_URL + '/rest/v1/' + table + '?' + filter, {
+      method: 'DELETE',
+      headers: SB._h()
+    });
+    return r.ok;
+  }
+};
+
+// ── DB Override: reads from Supabase, falls back to localStorage ──
+var DB_supa = {
+  // Schools
+  getSchools: async function() {
+    if (!supaEnabled) return DB.g('schools');
+    var data = await SB.get('fr_schools', 'order=name');
+    if (!data) return DB.g('schools');
+    // Convert snake_case to camelCase
+    return data.map(function(s){ return {
+      id:s.id, name:s.name, city:s.city, icon:s.icon||'🏫',
+      libName:s.lib_name, libPass:s.lib_pass,
+      dirName:s.dir_name, dirPass:s.dir_pass,
+      active:s.active
+    };});
+  },
+  // Books
+  getBooks: async function() {
+    if (!supaEnabled) return DB.g('books');
+    var data = await SB.get('fr_books', 'order=title');
+    if (!data) return DB.g('books');
+    return data.map(function(b){ return {
+      id:b.id, title:b.title, author:b.author, subject:b.subject,
+      year:b.year, level:b.level, pages:b.pages, pts:b.pts,
+      icon:b.icon||'📖', link:b.link||'', img:b.img||'',
+      global:b.global, school:b.school_id
+    };});
+  },
+  // Students with reading records
+  getStudents: async function() {
+    if (!supaEnabled) return DB.g('students');
+    var students = await SB.get('fr_students', 'order=name');
+    var records = await SB.get('fr_reading_records', 'select=student_id,book_id,score,pts_earned');
+    if (!students) return DB.g('students');
+    return students.map(function(s){
+      var myRecords = (records||[]).filter(function(r){return r.student_id===s.id;});
+      var scores = {};
+      myRecords.forEach(function(r){scores[r.book_id]=r.score;});
+      return {
+        id:s.id, school:s.school_id, name:s.name,
+        grade:s.grade, cls:s.class, pts:s.pts,
+        books:myRecords.map(function(r){return r.book_id;}),
+        scores:scores
+      };
+    });
+  },
+  // Save reading record
+  saveRecord: async function(studentId, bookId, score, pts) {
+    if (!supaEnabled) return;
+    await SB.post('fr_reading_records', {
+      student_id: studentId, book_id: bookId,
+      score: score, pts_earned: pts
+    });
+    // Update student pts
+    var students = await SB.get('fr_students', 'id=eq.'+studentId);
+    if (students && students[0]) {
+      var newPts = (students[0].pts||0) + pts;
+      await SB.patch('fr_students', 'id=eq.'+studentId, {pts: newPts});
+    }
+  },
+  // Add school
+  addSchool: async function(sc) {
+    if (!supaEnabled) return;
+    await SB.post('fr_schools', {
+      id:sc.id, name:sc.name, city:sc.city, icon:sc.icon,
+      lib_name:sc.libName, lib_pass:sc.libPass,
+      dir_name:sc.dirName, dir_pass:sc.dirPass
+    });
+  },
+  // Add book
+  addBook: async function(b) {
+    if (!supaEnabled) return;
+    await SB.post('fr_books', {
+      id:b.id, title:b.title, author:b.author, subject:b.subject,
+      year:b.year, level:b.level, pages:b.pages, pts:b.pts,
+      icon:b.icon, link:b.link, img:b.img, publisher:b.publisher,
+      global:b.global, school_id:b.school||null
+    });
+  },
+  // Add student
+  addStudent: async function(st) {
+    if (!supaEnabled) return;
+    await SB.post('fr_students', {
+      id:st.id, school_id:st.school, name:st.name,
+      grade:st.grade, class:st.cls, pts:0
+    });
+  }
+};
+
+// ── SYNC: load from Supabase and cache in localStorage ──
+async function syncFromSupabase() {
+  if (!supaEnabled) return;
+  try {
+    toast('🔄 جاري التزامن مع قاعدة البيانات...');
+    var [schools, books, students] = await Promise.all([
+      DB_supa.getSchools(),
+      DB_supa.getBooks(),
+      DB_supa.getStudents()
+    ]);
+    if (schools && schools.length) DB.s('schools', schools);
+    if (books && books.length) DB.s('books', books);
+    if (students && students.length) DB.s('students', students);
+    toast('✅ تم التزامن مع قاعدة البيانات');
+  } catch(e) {
+    console.error('Supabase sync error:', e);
+    toast('⚠️ تعذّر التزامن — يعمل محلياً');
+  }
+}
+
+// ── Check Supabase status on load ──
+async function checkSupabaseStatus() {
+  var statusEl = document.getElementById('supaStatus');
+  if (!statusEl) return;
+  if (!supaEnabled) {
+    statusEl.textContent = '⚠️ Supabase غير مفعّل — يعمل محلياً';
+    statusEl.style.color = '#b83232';
+    return;
+  }
+  try {
+    var r = await fetch(SUPA_URL + '/rest/v1/fr_schools?limit=1', {headers: SB._h()});
+    if (r.ok) {
+      statusEl.textContent = '✅ Supabase متصل — بيانات مزامنة';
+      statusEl.style.color = '#0a6b52';
+      syncFromSupabase();
+    } else {
+      statusEl.textContent = '❌ خطأ في الاتصال — تحقق من المفتاح';
+      statusEl.style.color = '#b83232';
+    }
+  } catch(e) {
+    statusEl.textContent = '⚠️ يعمل بدون اتصال';
+    statusEl.style.color = '#b83232';
+  }
+}
+
+// ════════════════════════════════════════════════════
+//  DATABASE
+// ════════════════════════════════════════════════════
+var DB = {
+  g: function(k){ try{ var v=localStorage.getItem('fr_'+k); return v?JSON.parse(v):null; }catch(e){return null;} },
+  s: function(k,v){ try{ localStorage.setItem('fr_'+k,JSON.stringify(v)); }catch(e){} },
+  d: function(k,v){ if(!DB.g(k))DB.s(k,v); return DB.g(k); }
+};
+
+var S0 = [
+  {id:'khb',name:'الخبيصي',city:'العين',icon:'🏔️',libName:'فاطمة الهاملي',libPass:'KHB-LIB-2026',dirName:'أحمد المنصوري',dirPass:'KHB-DIR-2026',active:true},
+  {id:'jmi',name:'الجيمي',city:'العين',icon:'🌴',libName:'نورة العجمي',libPass:'JMI-LIB-2026',dirName:'سعيد الكندي',dirPass:'JMI-DIR-2026',active:true},
+  {id:'shj',name:'الشارقة',city:'الشارقة',icon:'🌊',libName:'مريم الزعابي',libPass:'SHJ-LIB-2026',dirName:'خالد الشامسي',dirPass:'SHJ-DIR-2026',active:true},
+  {id:'bny',name:'بني ياس',city:'أبوظبي',icon:'🦅',libName:'آمنة الحوسني',libPass:'BNY-LIB-2026',dirName:'راشد المزروعي',dirPass:'BNY-DIR-2026',active:true},
+  {id:'mzd',name:'محمد بن زايد',city:'أبوظبي',icon:'🌟',libName:'عائشة الفلاسي',libPass:'MZD-LIB-2026',dirName:'يوسف النعيمي',dirPass:'MZD-DIR-2026',active:true},
+  {id:'dan',name:'الدانة',city:'أبوظبي',icon:'💎',libName:'أسماء مجدي',libPass:'DAN-LIB-2026',dirName:'محمد الظاهري',dirPass:'DAN-DIR-2026',active:true},
+];
+var B0 = [
+  {id:'b1',title:'رحلة ابن بطوطة',author:'ابن بطوطة',subject:'قصص ورحلات',year:'1990',level:'الحلقة الثانية (الصف 6-8)',pages:96,icon:'🗺️',pts:25,link:'',img:'',global:true,school:null},
+  {id:'b2',title:'علماء أشعلوا العالم',author:'محمود شاكر',subject:'سيرة وتاريخ',year:'2018',level:'الحلقة الثالثة (الصف 9-12)',pages:148,icon:'🔬',pts:35,link:'',img:'',global:true,school:null},
+  {id:'b3',title:'الإمارات — حضارة وتاريخ',author:'وزارة التعليم',subject:'وطني إماراتي',year:'2020',level:'الحلقة الثانية (الصف 6-8)',pages:120,icon:'🇦🇪',pts:30,link:'',img:'',global:true,school:null},
+  {id:'b4',title:'قصص من التاريخ الإسلامي',author:'محمود شاكر',subject:'ديني قصصي',year:'2015',level:'الحلقة الثالثة (الصف 9-12)',pages:220,icon:'🕌',pts:50,link:'https://ar.library.dctabudhabi.ae',img:'',global:true,school:null},
+  {id:'b5',title:'عجائب الكون',author:'ناشيونال جيوغرافيك',subject:'علوم وطبيعة',year:'2022',level:'الحلقة الثانية (الصف 6-8)',pages:180,icon:'🌍',pts:40,link:'',img:'',global:true,school:null},
+];
+var ST0 = [
+  {id:'s1',school:'khb',name:'سارة محمد الهاملي',grade:'الصف الحادي عشر',cls:'أ',books:['b1','b3','b4'],pts:285,scores:{b1:5,b3:4,b4:5}},
+  {id:'s2',school:'khb',name:'أحمد خالد النعيمي',grade:'الصف العاشر',cls:'ب',books:['b1','b2'],pts:160,scores:{b1:4,b2:3}},
+  {id:'s3',school:'khb',name:'محمد يوسف الشامسي',grade:'الصف الثاني عشر',cls:'أ',books:['b1','b3'],pts:155,scores:{b1:5,b3:4}},
+  {id:'s4',school:'jmi',name:'فاطمة علي الكندي',grade:'الصف التاسع',cls:'ب',books:['b2','b5'],pts:175,scores:{b2:5,b5:4}},
+  {id:'s5',school:'jmi',name:'خالد أحمد المنصوري',grade:'الصف العاشر',cls:'أ',books:['b1'],pts:90,scores:{b1:3}},
+  {id:'s7',school:'bny',name:'عمر يوسف الريامي',grade:'الصف العاشر',cls:'أ',books:['b1','b2','b5'],pts:210,scores:{b1:5,b2:4,b5:4}},
+];
+var QQ = [
+  {q:'ما الهدف الرئيسي الذي يسعى إليه هذا الكتاب؟',ch:['الترفيه فقط','نقل المعرفة وتنمية الفكر','تعليم اللغة','وصف الأماكن'],ok:1},
+  {q:'ما القيمة الأبرز التي يُرسّخها الكتاب؟',ch:['المنافسة','الصدق والأمانة','الثروة','الغموض'],ok:1},
+  {q:'ما الأسلوب الذي اعتمده الكاتب؟',ch:['علمي بحت','قصصي تشويقي','شعري','تحليلي'],ok:1},
+  {q:'من الفئة المستهدفة بهذا الكتاب؟',ch:['أطفال قبل المدرسة','طلاب في مختلف الأعمار','البالغون فقط','المعلمون'],ok:1},
+  {q:'ما علاقة الكتاب بقيم الهوية الإماراتية؟',ch:['لا علاقة','يتعارض معها','يُعزّزها ويُثريها','يتجاهلها'],ok:2},
+  {q:'ماذا استفدت شخصياً من قراءة هذا الكتاب؟',ch:['لا شيء','معلومات جديدة ومفيدة','ترفيه فقط','لم أفهمه'],ok:1},
+  {q:'هل تنصح صديقك بقراءة هذا الكتاب؟',ch:['لا أبداً','نعم ولماذا؟','ربما','لا أدري'],ok:1},
+  {q:'ما الموضوع الرئيسي الذي يتناوله الكتاب؟',ch:['الرياضة','التعليم والمعرفة','الطبخ','الترفيه'],ok:1},
+];
+
+// Init data
+(function(){
+  var ex = DB.g('schools');
+  if (!ex || !ex.length || !ex[0].libPass) {
+    DB.s('schools', S0);
+  } else {
+    var merged = ex.map(function(sc){
+      var def = S0.find(function(s){return s.id===sc.id;});
+      return def ? Object.assign({}, sc, {libPass:sc.libPass||def.libPass, dirPass:sc.dirPass||def.dirPass}) : sc;
+    });
+    DB.s('schools', merged);
+  }
+  DB.d('books', B0);
+  DB.d('students', ST0);
+})();
+
+var CU = null;
+var xlsP = {admin:[], lib:[]};
+var quizSt = {};
+
+// ════════════════════════════════════════════════════
+//  LOGIN
+// ════════════════════════════════════════════════════
+function onRole(){
+  var role = gv('lr');
+  var sd = document.getElementById('schDiv');
+  var ss = document.getElementById('ls');
+  var cl = document.getElementById('codeLabel');
+  if (['director','librarian','student'].includes(role)){
+    sd.style.display = 'block';
+    ss.innerHTML = DB.g('schools').filter(function(s){return s.active;}).map(function(s){
+      return '<option value="'+s.id+'">'+s.icon+' '+s.name+' — '+s.city+'</option>';
+    }).join('');
+    cl.textContent = role==='student' ? 'الرقم الدراسي (= كلمة المرور)' : 'كلمة المرور';
+  } else {
+    sd.style.display = 'none';
+    cl.textContent = 'كود الدخول';
+  }
+}
+
+function showErr(msg){ var e=document.getElementById('lerr'); e.textContent='❌ '+msg; e.style.display='block'; }
+
+function doLogin(){
+  var role = gv('lr'), code = gv('lc').trim(), school = gv('ls');
+  document.getElementById('lerr').style.display = 'none';
+  if (!role){ showErr('اختر دورك أولاً'); return; }
+  if (!code){ showErr('أدخل كلمة المرور'); return; }
+  var schools = DB.g('schools');
+  var user = {role:role, school:school||null};
+  if (role === 'admin'){
+    if (code !== 'ADMIN2026'){ showErr('كلمة المرور غير صحيحة'); return; }
+    user.name = 'المشرف العام';
+  } else if (role === 'director'){
+    var sc = schools.find(function(s){return s.id===school;});
+    if (!sc){ showErr('المدرسة غير موجودة'); return; }
+    var expD = sc.dirPass || (sc.id.toUpperCase()+'-DIR-2026');
+    if (code !== expD){ showErr('كلمة المرور غير صحيحة — المطلوب: '+expD); return; }
+    user.name = sc.dirName||'مدير'; user.schoolName = sc.name;
+  } else if (role === 'librarian'){
+    var sc = schools.find(function(s){return s.id===school;});
+    if (!sc){ showErr('المدرسة غير موجودة'); return; }
+    var expL = sc.libPass || (sc.id.toUpperCase()+'-LIB-2026');
+    if (code !== expL){ showErr('كلمة المرور غير صحيحة — المطلوب: '+expL); return; }
+    user.name = sc.libName||'أخصائي'; user.schoolName = sc.name;
+  } else {
+    var sc = schools.find(function(s){return s.id===school;});
+    if (!sc){ showErr('المدرسة غير موجودة'); return; }
+    var allStu = DB.g('students');
+    var stu = allStu.find(function(s){return s.id===code && s.school===school;});
+    if (!stu) stu = allStu.find(function(s){return s.id===code;});
+    if (!stu){
+      var schStu = allStu.filter(function(s){return s.school===school;});
+      var ids = schStu.map(function(s){return s.id;}).join(' | ');
+      showErr('الرقم غير موجود'+(ids?' — أرقام متاحة: '+ids:''));
+      return;
+    }
+    user.stuId = stu.id; user.name = stu.name; user.schoolName = sc.name;
+    user.school = stu.school;
+  }
+  CU = user;
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('appShell').style.display = 'flex';
+  document.getElementById('homeBtn').style.display = 'flex';
+  initApp();
+}
+
+function doLogout(){
+  CU = null;
+  document.getElementById('loginPage').style.display = 'flex';
+  document.getElementById('appShell').style.display = 'none';
+  document.getElementById('homeBtn').style.display = 'none';
+  document.getElementById('lc').value = '';
+}
+
+function resetData(){
+  if (!confirm('سيتم حذف جميع البيانات وإعادة تعيين الأكواد. تأكيد؟')) return;
+  var keys = [];
+  for (var i=0;i<localStorage.length;i++){ var k=localStorage.key(i); if(k&&k.startsWith('fr_'))keys.push(k); }
+  keys.forEach(function(k){localStorage.removeItem(k);});
+  DB.s('schools',S0); DB.s('books',B0); DB.s('students',ST0);
+  toast('✅ تم إعادة التعيين — كود الخبيصي: KHB-LIB-2026');
+  setTimeout(function(){location.reload();},1500);
+}
+
+function goHome(){
+  if (!CU) return;
+  var m={admin:'admin-home',director:'dir-home',librarian:'lib-home',student:'stu-home'};
+  showPg(m[CU.role]||'admin-home');
+}
+
+// ════════════════════════════════════════════════════
+//  INIT APP
+// ════════════════════════════════════════════════════
+function initApp(){
+  setAllLogos();
+  if (CU.role === 'admin') setTimeout(checkSupabaseStatus, 500);
+  var roles = {admin:'👑 أدمن',director:'🏫 مدير',librarian:'📚 أخصائي',student:'🎒 طالب'};
+  document.getElementById('tbRole').textContent = roles[CU.role]||'';
+  document.getElementById('tbSch').textContent = CU.schoolName||'جميع المدارس';
+  if (CU.role==='student'){ document.getElementById('tbPts').style.display='flex'; updPts(); }
+  buildNav();
+  goHome();
+}
+
+// ════════════════════════════════════════════════════
+//  NAV
+// ════════════════════════════════════════════════════
+function buildNav(){
+  var defs = {
+    admin:[
+      {sec:'الرئيسية',items:[
+        {id:'admin-home',i:'🏠',l:'لوحة التحكم'},
+        {id:'admin-schools',i:'🏫',l:'إدارة المدارس',b:DB.g('schools').length},
+        {id:'admin-books',i:'📚',l:'الكتب العامة'},
+        {id:'admin-deploy',i:'🚀',l:'رفع على GitHub'},
+        {id:'curated',i:'📗',l:'كتب رقمية معتمدة'},
+        {id:'events',i:'🏆',l:'الفعاليات',n:'جديد'},
+        {id:'digital',i:'📱',l:'المكتبات الرقمية'},
+      ]}
+    ],
+    librarian:[{sec:'مكتبتي',items:[
+      {id:'lib-home',i:'🏠',l:'لوحة الأخصائي'},
+      {id:'lib-students',i:'👥',l:'الطلاب'},
+      {id:'lib-books',i:'📚',l:'إدارة الكتب'},
+      {id:'events',i:'🏆',l:'الفعاليات'},
+      {id:'digital',i:'📱',l:'المكتبات الرقمية'},
+    ]}],
+    student:[{sec:'القراءة',items:[
+      {id:'stu-home',i:'📖',l:'مكتبتي'},
+      {id:'stu-profile',i:'👤',l:'ملفي الشخصي'},
+      {id:'events',i:'🏆',l:'الفعاليات'},
+      {id:'digital',i:'📱',l:'مكتبات رقمية'},
+      {id:'curated',i:'📗',l:'كتب رقمية معتمدة'},
+    ]}],
+    director:[{sec:'المتابعة',items:[
+      {id:'dir-home',i:'📊',l:'تقرير المدرسة'},
+      {id:'events',i:'🏆',l:'الفعاليات'},
+    ]}],
+  };
+  document.getElementById('navItems').innerHTML = (defs[CU.role]||[]).map(function(sec){
+    return '<div class="ns">'+sec.sec+'</div>' +
+      sec.items.map(function(it){
+        return '<button class="nb" id="nb-'+it.id+'" onclick="showPg(\''+it.id+'\')">'
+          +'<span class="ni">'+it.i+'</span>'+it.l
+          +(it.b?'<span class="nb-badge">'+it.b+'</span>':'')
+          +(it.n?'<span class="nb-new">'+it.n+'</span>':'')
+          +'</button>';
+      }).join('');
+  }).join('');
+}
+
+// ════════════════════════════════════════════════════
+//  ROUTING
+// ════════════════════════════════════════════════════
+function showPg(id){
+  document.querySelectorAll('.pg').forEach(function(p){p.classList.remove('on');});
+  document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('on');});
+  var pg = document.getElementById('pg-'+id);
+  if (pg){ pg.classList.add('on'); renderPg(id); }
+  var nb = document.getElementById('nb-'+id);
+  if (nb) nb.classList.add('on');
+}
+
+var RENDERS = {
+  'admin-home':rAdminHome,'admin-schools':rAdminSchools,'admin-books':rAdminBooks,
+  'events':rEvents,'digital':rDigital,
+  'curated':rCurated,
+  'admin-deploy':function(){},
+  'lib-home':rLibHome,'lib-books':rLibBooks,'lib-students':rLibStudents,
+  'stu-home':rStuHome,'stu-profile':rStuProfile,'dir-home':rDirHome
+};
+function renderPg(id){ if(RENDERS[id])RENDERS[id](); }
+
+// ════════════════════════════════════════════════════
+//  HELPERS
+// ════════════════════════════════════════════════════
+function gv(id){ var e=document.getElementById(id); return e?e.value:''; }
+function getStu(){ if(CU.role!=='student')return null; var s=DB.g('students'); return s.find(function(x){return x.id===CU.stuId;})||s.filter(function(x){return x.school===CU.school;})[0]; }
+function updPts(){ var s=getStu(); if(s)document.getElementById('tbPtsN').textContent=s.pts; }
+function gradeInfo(n){
+  if(n>=10)return{l:'A+ ممتاز',c:'bg'};
+  if(n>=7)return{l:'A جيد جداً',c:'bg'};
+  if(n>=5)return{l:'B+ جيد',c:'bb'};
+  if(n>=3)return{l:'B مقبول',c:'bo'};
+  if(n>=1)return{l:'C يحتاج جهداً',c:'bo'};
+  return{l:'D لم يبدأ',c:'br'};
+}
+function calcScore(s){ var n=s.books.length; var r=Object.values(s.scores||{}); var avg=r.length?(r.reduce(function(a,v){return a+v;},0)/r.length/5*100):0; return Math.min(100,Math.round(n*6+avg*.4)); }
+function rankInfo(n){ if(n>=25)return{i:'💎',l:'القارئ الماسي'}; if(n>=12)return{i:'🌟',l:'القارئ الذهبي'}; if(n>=7)return{i:'🥈',l:'قارئ متميز'}; if(n>=4)return{i:'📖',l:'قارئ نشط'}; if(n>=1)return{i:'🌱',l:'قارئ ناشئ'}; return{i:'📚',l:'ابدأ القراءة'}; }
+function krow(el,items){ if(!el)return; el.innerHTML=items.map(function(k){ return '<div class="kpi" style="--kc:'+k.c+'"><div class="ki">'+k.i+'</div><div class="kn">'+k.n+'</div><div class="kl">'+k.l+'</div></div>'; }).join(''); }
+
+function bkCard(b, forStu, done){
+  var lvlC={'KG — مرحلة الروضة':'#f5a623','الحلقة الأولى (الصف 1-5)':'#0d8a79','الحلقة الثانية (الصف 6-8)':'#1a73be','الحلقة الثالثة (الصف 9-12)':'#b83232','جميع المراحل':'#4c1d95'};
+  var catBg={'قصص وروايات':'linear-gradient(135deg,#fce7f3,#fbcfe8)','شعر وأدب':'linear-gradient(135deg,#f0f9ff,#e0f2fe)','سيرة وتاريخ':'linear-gradient(135deg,#f3e8ff,#e9d5ff)','ديني قصصي':'linear-gradient(135deg,#fef3c7,#fde68a)','علوم وطبيعة':'linear-gradient(135deg,#e0f2fe,#bae6fd)','وطني إماراتي':'linear-gradient(135deg,#dcfce7,#bbf7d0)','تقنية وابتكار':'linear-gradient(135deg,#f0fdf4,#dcfce7)'};
+  var lv = b.level||'';
+  var lc = lvlC[lv]||'#555';
+  var bg = catBg[b.subject]||catBg[b.cat]||'#f0f5fc';
+  var lvShort = lv.split(' ')[0];
+  var coverHtml = b.img
+    ? '<img src="'+b.img+'" alt="" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'">'
+      +'<span class="bc-ico">'+( b.icon||'📖')+'</span>'
+    : '<span class="bc-ico">'+(b.icon||'📖')+'</span>';
+  var subLine = b.subject ? '<div class="bi-s">'+b.subject+(b.year?' — '+b.year:'')+'</div>' : '';
+  var lnkLine = b.link ? '<a href="'+b.link+'" target="_blank" style="font-size:10px;color:var(--blue);font-weight:700;display:block;margin-top:3px">📱 قراءة إلكترونية</a>' : '';
+  var btnLine = forStu ? '<button class="bi-btn'+(done?' dn':'')+'" onclick="openQuiz(\''+b.id+'\')">'+(done?'✅ إعادة الاختبار':'📖 اقرأ واختبر')+'</button>' : '';
+  var doneBadge = done ? '<span class="bd">✅ مكتمل</span>' : '';
+  return '<div class="bk'+(done?' done':'')+'">'
+    +'<div class="bc" style="background:'+bg+'">'+coverHtml
+    +'<span class="bvl" style="background:'+lc+'">'+lvShort+'</span>'+doneBadge+'</div>'
+    +'<div class="bi"><div class="bi-t">'+b.title+'</div><div class="bi-a">'+(b.author||'—')+'</div>'
+    +subLine+'<div class="bi-stars" style="font-size:10px;color:var(--orange);margin-top:2px">★★★★☆ 📄'+(b.pages||'—')+' ص</div>'
+    +lnkLine+btnLine+'</div></div>';
+}
+
+// ════════════════════════════════════════════════════
+//  EVENTS RENDER
+// ════════════════════════════════════════════════════
+function rEvents(){
+  document.querySelectorAll('[id$="Logo"]').forEach(function(el){ el.src=LOGO_SRC; });
+  var el = document.getElementById('evGrid');
+  el.innerHTML = EVENTS.map(function(ev){
+    return '<div class="ev-card" style="border-top:4px solid '+ev.color+'">'
+      +'<div class="ev-header">'
+      +'<div class="ev-icon">'+ev.icon+'</div>'
+      +'<div class="ev-title">'+ev.title+'</div>'
+      +'<div class="ev-org">'+ev.org+'</div>'
+      +'<span class="ev-badge" style="background:'+ev.statusBg+';color:'+ev.statusColor+'">'+ev.status+'</span>'
+      +'</div>'
+      +'<div class="ev-body">'
+      +'<div class="ev-dates">📅 '+ev.dates+'</div>'
+      +'<div class="ev-desc">'+ev.desc+'</div>'
+      +'<div class="ev-targets">'+ev.targets.map(function(t){return '<span class="ev-tag">'+t+'</span>';}).join('')+'</div>'
+      +'<div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:6px">📋 آلية المشاركة:</div>'
+      +'<div style="font-size:12px;color:var(--text);line-height:1.8">'+ev.steps.map(function(s,i){return (i+1)+'. '+s;}).join('<br>')+'</div>'
+      +(ev.link!='#'?'<button class="ev-btn" style="margin-top:12px" onclick="openInBrowser(\'' + ev.link + '\', \'' + ev.title + '\')">🔗 فتح داخل المنصة</button>':'<div style="text-align:center;margin-top:12px;font-size:12px;color:var(--muted)">📌 التسجيل عبر مكتبة المدرسة</div>')
+      +'</div></div>';
+  }).join('');
+}
+
+// ════════════════════════════════════════════════════
+//  DIGITAL LIBRARIES RENDER
+// ════════════════════════════════════════════════════
+function rDigital(){
+  function mkCard(d, access){
+    return '<div class="dl-card"><div class="dl-icon">'+d.icon+'</div><div class="dl-info">'
+      +'<div class="dl-name">'+d.name+'</div>'
+      +'<div class="dl-desc">'+d.desc+'</div>'
+      +'<span class="dl-access '+(access==='free'?'dl-free':'dl-acct')+'">'+(access==='free'?'✅ مجاني':'🔐 يحتاج حساباً')+'</span>'
+      +'<div><a href="'+d.link+'" target="_blank" class="dl-btn">🔗 فتح المكتبة</a></div>'
+      +'</div></div>';
+  }
+  document.getElementById('dlFreeGrid').innerHTML = DL_FREE.map(function(d){return mkCard(d,'free');}).join('');
+  document.getElementById('dlAcctGrid').innerHTML = DL_ACCT.map(function(d){return mkCard(d,'acct');}).join('');
+}
+
+// ════════════════════════════════════════════════════
+//  ADMIN RENDERS
+// ════════════════════════════════════════════════════
+function rAdminHome(){
+  var sc=DB.g('schools'), st=DB.g('students'), bk=DB.g('books');
+  var total=st.reduce(function(s,x){return s+x.books.length;},0);
+  document.getElementById('ahStats').innerHTML=[{v:sc.filter(function(s){return s.active;}).length,l:'مدارس'},{v:st.length,l:'طالب'},{v:total,l:'كتاب قُرئ'}].map(function(x){return '<div class="phs"><div class="phs-n">'+x.v+'</div><div class="phs-l">'+x.l+'</div></div>';}).join('');
+  krow(document.getElementById('adminKpis'),[
+    {i:'🏫',n:sc.filter(function(s){return s.active;}).length,l:'مدارس نشطة',c:'#1a73be'},
+    {i:'👥',n:st.length,l:'طالب مسجل',c:'#00b4b6'},
+    {i:'📖',n:total,l:'كتاب قُرئ',c:'#f5a623'},
+    {i:'📚',n:bk.length,l:'كتاب في المنصة',c:'#0a6b52'},
+  ]);
+  document.getElementById('adminSchCards').innerHTML=sc.map(function(s){
+    var sts=st.filter(function(x){return x.school===s.id;});
+    var tr=sts.reduce(function(a,x){return a+x.books.length;},0);
+    return '<div class="sc-card"><div style="display:flex;align-items:center;gap:9px;margin-bottom:10px">'
+      +'<span style="font-size:26px">'+s.icon+'</span>'
+      +'<div style="flex:1"><div style="font-size:14px;font-weight:900;color:var(--navy)">'+s.name+'</div><div style="font-size:11px;color:var(--muted)">📍 '+s.city+'</div></div>'
+      +'<span class="badge '+(s.active?'bg':'bx')+'">'+(s.active?'نشطة':'موقوفة')+'</span></div>'
+      +'<div class="sc-stats"><div class="ss"><div class="sn">'+sts.length+'</div><div class="sl">طالب</div></div>'
+      +'<div class="ss"><div class="sn">'+tr+'</div><div class="sl">كتاب</div></div>'
+      +'<div class="ss"><div class="sn">'+(sts.length?(tr/sts.length).toFixed(1):0)+'</div><div class="sl">معدل</div></div></div>'
+      +'<div style="display:flex;gap:5px">'
+      +'<button class="btn bo2 bs" onclick="toggleSch(\''+s.id+'\')">'+(s.active?'⏸️ إيقاف':'▶️ تفعيل')+'</button>'
+      +'<button class="btn br2 bs" onclick="delSch(\''+s.id+'\')">🗑️</button></div></div>';
+  }).join('');
+  var stats=sc.map(function(s){var sts=st.filter(function(x){return x.school===s.id;});var t=sts.reduce(function(a,x){return a+x.books.length;},0);return{s:s,t:t,a:sts.length?(t/sts.length).toFixed(1):0,c:sts.length};}).sort(function(a,b){return b.t-a.t;});
+  var rk=['🥇','🥈','🥉','4','5','6'];
+  document.getElementById('adminCompTbl').innerHTML='<thead><tr><th>الترتيب</th><th>المدرسة</th><th>المدينة</th><th>الطلاب</th><th>الكتب</th><th>المعدل</th></tr></thead><tbody>'+stats.map(function(x,i){return'<tr><td><strong>'+rk[i]+'</strong></td><td>'+x.s.icon+' <strong>'+x.s.name+'</strong></td><td>'+x.s.city+'</td><td>'+x.c+'</td><td><strong>'+x.t+'</strong></td><td>'+x.a+'</td></tr>';}).join('')+'</tbody>';
+}
+
+function rAdminSchools(){
+  var sc=DB.g('schools'),st=DB.g('students'),bk=DB.g('books');
+  document.getElementById('schTBody').innerHTML=sc.map(function(s){
+    var sts=st.filter(function(x){return x.school===s.id;}).length;
+    var bks=bk.filter(function(b){return b.school===s.id||b.global;}).length;
+    return '<tr><td><strong>'+s.icon+' '+s.name+'</strong></td><td>'+s.city+'</td><td>'+(s.libName||'—')+'</td><td>'+sts+'</td><td>'+bks+'</td><td><span class="badge '+(s.active?'bg':'bx')+'">'+(s.active?'نشطة':'موقوفة')+'</span></td><td>'
+      +'<button class="btn bo2 bs" onclick="toggleSch(\''+s.id+'\')">'+(s.active?'إيقاف':'تفعيل')+'</button> '
+      +'<button class="btn br2 bs" onclick="delSch(\''+s.id+'\')">🗑️</button></td></tr>';
+  }).join('');
+}
+
+function rAdminBooks(){
+  var bk=DB.g('books').filter(function(b){return b.global;});
+  document.getElementById('gbGrid').innerHTML=bk.map(function(b){return bkCard(b,false,false);}).join('')||'<div style="color:var(--muted);padding:10px">لا توجد كتب عامة بعد</div>';
+}
+
+// ════════════════════════════════════════════════════
+//  LIBRARIAN RENDERS
+// ════════════════════════════════════════════════════
+function rLibHome(){
+  var sc=DB.g('schools').find(function(s){return s.id===CU.school;});
+  document.getElementById('libTitle').textContent='مكتبة '+(sc&&sc.name||'')+' — '+(sc&&sc.libName||'');
+  var sts=DB.g('students').filter(function(s){return s.school===CU.school;});
+  var total=sts.reduce(function(a,s){return a+s.books.length;},0);
+  document.getElementById('lhStats').innerHTML=[{v:sts.length,l:'طالب'},{v:total,l:'كتاب'}].map(function(x){return '<div class="phs"><div class="phs-n">'+x.v+'</div><div class="phs-l">'+x.l+'</div></div>';}).join('');
+  krow(document.getElementById('libKpis'),[
+    {i:'👥',n:sts.length,l:'طالب مسجل',c:'#1a73be'},
+    {i:'📖',n:total,l:'كتب مقروءة',c:'#00b4b6'},
+    {i:'⭐',n:sts.filter(function(s){return s.books.length>=5;}).length,l:'بلغوا الهدف',c:'#f5a623'},
+    {i:'📊',n:sts.length?(total/sts.length).toFixed(1):0,l:'معدل/طالب',c:'#0a6b52'},
+  ]);
+  document.getElementById('libSBody').innerHTML=[].concat(sts).sort(function(a,b){return b.books.length-a.books.length;}).map(function(s){
+    var g=gradeInfo(s.books.length); var p=Math.min(100,Math.round(s.books.length/12*100));
+    return '<tr><td><strong>'+s.name+'</strong></td><td>'+s.grade+'—'+(s.cls||'')+'</td><td>'+s.books.length+'</td><td>'+s.pts+'</td>'
+      +'<td><div class="pb"><div class="pbf" style="width:'+p+'%;background:var(--teal)"></div></div></td>'
+      +'<td><span class="badge '+g.c+'">'+g.l+'</span></td></tr>';
+  }).join('')||'<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:14px">لا بيانات</td></tr>';
+}
+
+function rLibBooks(){
+  var sb=DB.g('books').filter(function(b){return b.school===CU.school;});
+  var gb=DB.g('books').filter(function(b){return b.global;});
+  document.getElementById('sbGrid').innerHTML=sb.map(function(b){return bkCard(b,false,false);}).join('')||'<div style="color:var(--muted);padding:10px">لم تضف كتباً بعد</div>';
+  document.getElementById('gbLibGrid').innerHTML=gb.map(function(b){return bkCard(b,false,false);}).join('');
+}
+
+function rLibStudents(){
+  var sts=DB.g('students').filter(function(s){return s.school===CU.school;});
+  document.getElementById('allSBody').innerHTML=sts.map(function(s){
+    var g=gradeInfo(s.books.length); var gs=calcScore(s);
+    return '<tr><td><strong>'+s.name+'</strong></td><td>'+s.grade+'—'+(s.cls||'')+'</td>'
+      +'<td><code style="background:#f0f5fc;padding:2px 6px;border-radius:4px;font-size:10px">'+s.id+'</code></td>'
+      +'<td>'+s.books.length+'</td><td>⭐'+s.pts+'</td>'
+      +'<td><span class="badge '+g.c+'">'+gs+'/100</span></td>'
+      +'<td><div class="pb"><div class="pbf" style="width:'+Math.min(100,s.books.length/12*100)+'%;background:var(--blue)"></div></div></td></tr>';
+  }).join('')||'<tr><td colspan="7" style="text-align:center;color:var(--muted)">لا طلاب مسجلين</td></tr>';
+}
+
+// ════════════════════════════════════════════════════
+//  STUDENT RENDERS
+// ════════════════════════════════════════════════════
+function rStuHome(){
+  var stu=getStu(); if(!stu)return;
+  document.getElementById('stuTitle').textContent='مرحباً '+(stu.name.split(' ')[0]||'')+'! 👋';
+  var pct=Math.min(100,Math.round(stu.books.length/12*100));
+  document.getElementById('stuGB').style.width=pct+'%';
+  document.getElementById('stuGP').textContent=pct+'%';
+  document.getElementById('stuGL').textContent=stu.books.length+'/12 كتاب';
+  var rk=rankInfo(stu.books.length);
+  document.getElementById('stuRI').textContent=rk.i;
+  document.getElementById('stuRN').textContent=rk.l;
+  document.getElementById('stuStats').innerHTML=[{v:stu.books.length,l:'كتاب'},{v:stu.pts,l:'نقطة'},{v:gradeInfo(stu.books.length).l,l:'الدرجة'}].map(function(x){return '<div class="phs"><div class="phs-n">'+x.v+'</div><div class="phs-l">'+x.l+'</div></div>';}).join('');
+  var books=DB.g('books').filter(function(b){return b.global||b.school===CU.school;});
+  document.getElementById('stuBGrid').innerHTML=books.map(function(b){return bkCard(b,true,stu.books.includes(b.id));}).join('');
+  var sts=DB.g('students').filter(function(s){return s.school===CU.school;});
+  var sorted=[].concat(sts).sort(function(a,b){return b.books.length-a.books.length;});
+  var rks=['🥇','🥈','🥉','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣'];
+  document.getElementById('stuLb').innerHTML='<div class="ct">🏆 لوحة الشرف — مدرستك</div>'
+    +sorted.slice(0,8).map(function(s,i){
+      return '<div class="lbr"><div class="lrk '+(i===0?'r1':i===1?'r2':i===2?'r3':'rn')+'">'+rks[i]+'</div>'
+        +'<div style="flex:1"><div style="font-size:13px;font-weight:700;color:'+(s.id===stu.id?'var(--blue)':'var(--navy)')+'">'+s.name+(s.id===stu.id?' (أنت)':'')+'</div><div style="font-size:11px;color:var(--muted)">'+s.grade+'</div></div>'
+        +'<div style="text-align:left"><div style="font-size:13px;font-weight:900;color:var(--navy)">📚 '+s.books.length+'</div><div style="font-size:10px;color:var(--orange);font-weight:700">⭐ '+s.pts+'</div></div></div>';
+    }).join('');
+}
+
+function rStuProfile(){
+  var stu=getStu(); if(!stu)return;
+  var books=DB.g('books'); var gs=calcScore(stu);
+  document.getElementById('stuProf').innerHTML='<div class="krow">'
+    +[{i:'📚',n:stu.books.length,l:'كتب مقروءة',c:'#1a73be'},{i:'⭐',n:stu.pts,l:'نقاط',c:'#f5a623'},{i:'🎯',n:gs,l:'درجة القراءة',c:'#00b4b6'},{i:rankInfo(stu.books.length).i,n:rankInfo(stu.books.length).l,l:'المستوى',c:'#0a6b52'}].map(function(k){return'<div class="kpi" style="--kc:'+k.c+'"><div class="ki">'+k.i+'</div><div class="kn" style="font-size:18px">'+k.n+'</div><div class="kl">'+k.l+'</div></div>';}).join('')
+    +'</div><div class="card"><div class="ct">📖 الكتب المقروءة</div>'
+    +(stu.books.length===0?'<div style="color:var(--muted)">لم تقرأ أي كتاب بعد — ابدأ الآن!</div>':stu.books.map(function(bid){var b=books.find(function(x){return x.id===bid;});return b?'<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)"><span style="font-size:20px">'+(b.icon||'📖')+'</span><div style="flex:1"><div style="font-weight:700;color:var(--navy)">'+b.title+'</div><div style="font-size:11px;color:var(--muted)">'+b.author+(b.subject?' — '+b.subject:'')+'</div></div><span class="badge bg">'+(stu.scores&&stu.scores[bid]||0)+'/5 ✅</span></div>':'';}).join(''))
+    +'</div><div class="info">💡 <strong>الدرجة المقترحة للتقدير: '+gs+'/100</strong> — جاهزة عند تفعيل الخيار من الإدارة.</div>';
+}
+
+function rDirHome(){
+  var sc=DB.g('schools').find(function(s){return s.id===CU.school;});
+  document.getElementById('dirTitle').textContent='مدرسة '+(sc&&sc.name||'')+' — تقرير القراءة';
+  var sts=DB.g('students').filter(function(s){return s.school===CU.school;});
+  var total=sts.reduce(function(a,s){return a+s.books.length;},0);
+  krow(document.getElementById('dirKpis'),[
+    {i:'👥',n:sts.length,l:'طالب مسجل',c:'#1a73be'},
+    {i:'📖',n:total,l:'كتب مقروءة',c:'#00b4b6'},
+    {i:'⭐',n:sts.filter(function(s){return s.books.length>=5;}).length,l:'بلغوا الهدف',c:'#f5a623'},
+    {i:'📊',n:sts.length?(total/sts.length).toFixed(1):0,l:'معدل/طالب',c:'#0a6b52'},
+  ]);
+  document.getElementById('dirSBody').innerHTML=[].concat(sts).sort(function(a,b){return b.books.length-a.books.length;}).map(function(s){var g=gradeInfo(s.books.length);return'<tr><td><strong>'+s.name+'</strong></td><td>'+s.grade+'</td><td>'+s.books.length+'</td><td>⭐'+s.pts+'</td><td><span class="badge '+g.c+'">'+calcScore(s)+'/100</span></td></tr>';}).join('')||'<tr><td colspan="5" style="text-align:center;color:var(--muted)">لا طلاب</td></tr>';
+}
+
+// ════════════════════════════════════════════════════
+//  SCHOOL MANAGEMENT
+// ════════════════════════════════════════════════════
+function showAddSch(){ document.getElementById('addSchModal').style.display='flex'; }
+function closeAddSch(){ document.getElementById('addSchModal').style.display='none'; }
+function autoP(code){ var lp=document.getElementById('as-lp'),dp=document.getElementById('as-dp'); if(lp&&code)lp.value=code+'-LIB-2026'; if(dp&&code)dp.value=code+'-DIR-2026'; }
+function addSchool(){
+  var n=gv('as-n').trim(),c=gv('as-c').trim(),code=gv('as-code').trim().toUpperCase();
+  var ico=gv('as-ico').trim()||'🏫',libN=gv('as-lib').trim(),libP=gv('as-lp').trim()||code+'-LIB-2026';
+  var dirN=gv('as-dir').trim(),dirP=gv('as-dp').trim()||code+'-DIR-2026';
+  if(!n||!c||!code){toast('⚠️ أدخل اسم المدرسة والمدينة والرمز');return;}
+  var schools=DB.g('schools');
+  if(schools.find(function(s){return s.id===code.toLowerCase();})){toast('⚠️ رمز موجود مسبقاً');return;}
+  schools.push({id:code.toLowerCase(),name:n,city:c,icon:ico,libName:libN,libPass:libP,dirName:dirN,dirPass:dirP,active:true});
+  DB.s('schools',schools);
+  if(supaEnabled)DB_supa.addSchool({id:code.toLowerCase(),name:n,city:c,icon:ico,libName:libN,libPass:libP,dirName:dirN,dirPass:dirP});
+  closeAddSch();
+  toast('✅ تمت إضافة "'+n+'" | كود الأخصائي: '+libP);
+  rAdminSchools();rAdminHome();buildNav();
+  ['as-n','as-c','as-code','as-ico','as-lib','as-lp','as-dir','as-dp'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+}
+function toggleSch(id){ var sc=DB.g('schools');var i=sc.findIndex(function(s){return s.id===id;});if(i>=0){sc[i].active=!sc[i].active;DB.s('schools',sc);}rAdminSchools();rAdminHome();toast(sc[i]&&sc[i].active?'✅ تم تفعيل المدرسة':'⏸️ تم إيقاف المدرسة'); }
+function delSch(id){ if(!confirm('حذف هذه المدرسة نهائياً؟'))return;DB.s('schools',DB.g('schools').filter(function(s){return s.id!==id;}));rAdminSchools();rAdminHome();toast('🗑️ تم الحذف'); }
+
+// ════════════════════════════════════════════════════
+//  BOOK MANAGEMENT
+// ════════════════════════════════════════════════════
+function addGBook(){
+  var t=gv('gb-t').trim(),a=gv('gb-a').trim(),pub=gv('gb-pub').trim();
+  if(!t||!a){toast('⚠️ أدخل العنوان والمؤلف');return;}
+  var check=checkBanned(t,a,pub);
+  if(check.banned){toast('🚫 رُفض: '+check.reason);return;}
+  var bk=DB.g('books');
+  bk.push({id:'b'+Date.now(),title:t,author:a,publisher:pub,subject:gv('gb-s'),year:gv('gb-y'),level:gv('gb-l'),pages:parseInt(gv('gb-p'))||0,pts:parseInt(gv('gb-pt'))||30,link:gv('gb-lk').trim(),img:gv('gb-img').trim(),icon:'📖',global:true,school:null});
+  DB.s('books',bk);
+  ['gb-t','gb-a','gb-pub','gb-y','gb-p','gb-lk','gb-img'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+  rAdminBooks();toast('✅ تمت إضافة الكتاب للمكتبة العامة');
+}
+function addSBook(){
+  var t=gv('lb-t').trim(),a=gv('lb-a').trim(),pub=gv('lb-pub').trim();
+  if(!t||!a){toast('⚠️ أدخل العنوان والمؤلف');return;}
+  var check=checkBanned(t,a,pub);
+  if(check.banned){toast('🚫 رُفض: '+check.reason);return;}
+  var bk=DB.g('books');
+  bk.push({id:'b'+Date.now(),title:t,author:a,publisher:pub,subject:gv('lb-s'),year:gv('lb-y'),level:gv('lb-l'),pages:parseInt(gv('lb-p'))||0,pts:parseInt(gv('lb-pt'))||30,link:gv('lb-lk').trim(),img:gv('lb-img').trim(),icon:'📖',global:false,school:CU.school});
+  DB.s('books',bk);
+  ['lb-t','lb-a','lb-pub','lb-y','lb-p','lb-lk','lb-img'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+  rLibBooks();toast('✅ تمت إضافة الكتاب لمكتبة مدرستك');
+}
+function addStudent(){
+  var n=gv('ns-n').trim(),id=gv('ns-id').trim();
+  if(!n||!id){toast('⚠️ أدخل اسم الطالب ورقمه');return;}
+  var sts=DB.g('students');
+  if(sts.find(function(s){return s.id===id;})){toast('⚠️ الرقم موجود مسبقاً');return;}
+  sts.push({id:id,school:CU.school,name:n,grade:gv('ns-g'),cls:gv('ns-c'),books:[],pts:0,scores:{}});
+  DB.s('students',sts);
+  ['ns-n','ns-id','ns-c'].forEach(function(i){var e=document.getElementById(i);if(e)e.value='';});
+  rLibStudents();toast('✅ تم تسجيل الطالب — باسورده: '+id);
+}
+
+// ════════════════════════════════════════════════════
+//  EXCEL IMPORT
+// ════════════════════════════════════════════════════
+function onXlsDrop(e,who){ e.preventDefault(); var f=e.dataTransfer.files[0]; if(f)parseXls(f,who); }
+function parseXls(file,who){
+  if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    try{
+      var data=new Uint8Array(ev.target.result);
+      var wb=XLSX.read(data,{type:'array'});
+      var ws=wb.Sheets[wb.SheetNames[0]];
+      var rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+      var start=(rows[0]&&(String(rows[0][0]).includes('عنوان')||String(rows[0][0]).toLowerCase().includes('title')))?1:0;
+      var iconMap={قصص:'📖',شعر:'📜',رواية:'📚',علوم:'🔬',تاريخ:'🏛️',ديني:'🕌',وطني:'🇦🇪',رياضيات:'🔢',جغرافيا:'🌍',أدب:'✍️',سيرة:'👤',فنون:'🎨',تقنية:'💻'};
+      var parsed=[]; var rejected=[];
+      for(var i=start;i<rows.length;i++){
+        var r=rows[i];
+        var title=String(r[0]||'').trim();
+        if(!title)continue;
+        var author=String(r[1]||'').trim();
+        var subject=String(r[2]||'').trim();
+        var publisher=String(r[8]||'').trim();
+        var check=checkBanned(title,author,publisher);
+        if(check.banned){ rejected.push(title+' ('+check.reason+')'); continue; }
+        var autoI=Object.keys(iconMap).find(function(k){return subject.includes(k);});
+        parsed.push({id:'b'+Date.now()+i,title:title,author:author,subject:subject,year:String(r[3]||'').trim(),level:String(r[4]||'الحلقة الثانية (الصف 6-8)').trim(),pages:parseInt(r[5])||0,link:String(r[6]||'').trim(),pts:parseInt(r[7])||30,icon:iconMap[autoI]||'📖',img:''});
+      }
+      xlsP[who]=parsed;
+      var pid='xp'+(who==='admin'?'A':'L');
+      document.getElementById(pid).style.display='block';
+      document.getElementById(pid+'Title').textContent='📊 '+file.name+' — '+parsed.length+' كتاب مقبول'+(rejected.length?' | '+rejected.length+' مرفوض':'');
+      document.getElementById(pid+'List').innerHTML=parsed.slice(0,8).map(function(b){
+        return '<div class="xi"><span>'+b.icon+'</span><strong style="flex:1;color:var(--navy)">'+b.title+'</strong><span style="color:var(--muted)">'+b.author+'</span><span class="badge bb" style="font-size:10px">'+b.level.split(' ')[0]+'</span></div>';
+      }).join('')+(parsed.length>8?'<div class="xi" style="color:var(--muted)">+ '+(parsed.length-8)+' كتاب...</div>':'')
+        +(rejected.length?'<div style="padding:6px 11px;background:#fce8e8;font-size:11px;color:var(--red)">🚫 مرفوض: '+rejected.slice(0,3).join(' | ')+(rejected.length>3?' ...':'')+'</div>':'');
+      toast('✅ قُرئ '+parsed.length+' كتاب'+(rejected.length?' | 🚫 '+rejected.length+' مرفوض':''));
+    }catch(err){toast('⚠️ خطأ في قراءة الملف');console.error(err);}
+  };
+  reader.readAsArrayBuffer(file);
+}
+function importXls(who){
+  var parsed=xlsP[who];
+  if(!parsed||!parsed.length)return;
+  var bk=DB.g('books');
+  parsed.forEach(function(b){bk.push(Object.assign({},b,{global:who==='admin',school:who==='lib'?CU.school:null}));});
+  DB.s('books',bk);
+  xlsP[who]=[];
+  var pid='xp'+(who==='admin'?'A':'L');
+  document.getElementById(pid).style.display='none';
+  if(who==='admin'){rAdminBooks();toast('✅ تمت إضافة الكتب للمكتبة العامة');}
+  else{rLibBooks();toast('✅ تمت إضافة الكتب لمكتبة مدرستك');}
+}
+function dlTemplate(){
+  var ws=XLSX.utils.aoa_to_sheet([
+    ['عنوان_الكتاب','المؤلف','موضوع_الكتاب','سنة_النشر','المرحلة_الدراسية','عدد_الصفحات','رابط_رقمي','النقاط','دار_النشر'],
+    ['رحلة ابن بطوطة','ابن بطوطة','قصص ورحلات',1990,'الحلقة الثانية (الصف 6-8)',96,'',25,'دار المعارف'],
+    ['علماء أشعلوا العالم','محمود شاكر','سيرة وتاريخ',2018,'الحلقة الثالثة (الصف 9-12)',148,'https://ar.library.dctabudhabi.ae',35,'دار القلم'],
+    ['قصص الأنبياء للأطفال','محمود المصري','ديني قصصي',2015,'الحلقة الأولى (الصف 1-5)',80,'',20,'دار المنهل'],
+    ['أمير الشعراء','أحمد شوقي','شعر وأدب',2010,'الحلقة الثالثة (الصف 9-12)',120,'',30,''],
+    ['قصتي مع الكتاب','مثال','قصص',2020,'KG — مرحلة الروضة',32,'',15,''],
+  ]);
+  var wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'قائمة الكتب');
+  XLSX.writeFile(wb,'نموذج_كتب_الفلاح_2026.xlsx');
+  toast('📥 تم تحميل نموذج Excel');
+}
+
+// ════════════════════════════════════════════════════
+//  QUIZ — Anti-cheat shuffle
+// ════════════════════════════════════════════════════
+function openQuiz(bookId){
+  var b=DB.g('books').find(function(x){return x.id===bookId;});
+  if(!b)return;
+  quizSt={bookId:bookId,q:0,score:0,sel:null,timer:null,time:150,shuffled:null};
+  document.getElementById('quizModal').style.display='flex';
+  renderQ(b);
+}
+
+function renderQ(b){
+  if(quizSt.q===0 && !quizSt.shuffled){
+    var all=QQ.map(function(q){
+      var arr=q.ch.map(function(ch,i){return{ch:ch,correct:i===q.ok};});
+      for(var k=arr.length-1;k>0;k--){var j=Math.floor(Math.random()*(k+1));var tmp=arr[k];arr[k]=arr[j];arr[j]=tmp;}
+      return{q:q.q,ch:arr.map(function(x){return x.ch;}),ok:arr.findIndex(function(x){return x.correct;})};
+    });
+    for(var k=all.length-1;k>0;k--){var j=Math.floor(Math.random()*(k+1));var tmp=all[k];all[k]=all[j];all[j]=tmp;}
+    quizSt.shuffled=all.slice(0,5);
+  }
+  var questions=quizSt.shuffled||QQ;
+  var q=questions[quizSt.q]; var tot=questions.length;
+  quizSt.sel=null; clearInterval(quizSt.timer); quizSt.time=150;
+  
+  var inner=document.getElementById('quizInner');
+  inner.innerHTML='';
+  
+  var hdr=document.createElement('div'); hdr.className='mhdr';
+  var xb=document.createElement('button'); xb.className='xcbtn'; xb.textContent='✕ إغلاق';
+  xb.addEventListener('click',function(){ if(confirm('هل تريد الخروج؟ الإجابات الحالية لن تُحفظ.')){closeQuiz();}});
+  hdr.appendChild(xb);
+  var h3=document.createElement('h3'); h3.textContent=b.icon+' '+b.title; hdr.appendChild(h3);
+  var p=document.createElement('p'); p.textContent='السؤال '+(quizSt.q+1)+' من '+tot+' — اختبار الاستيعاب (2.5 دقيقة)'; hdr.appendChild(p);
+  var tt=document.createElement('div'); tt.className='ttrack';
+  var tf=document.createElement('div'); tf.className='tfill'; tf.id='tf'; tf.style.width='100%';
+  tt.appendChild(tf); hdr.appendChild(tt); inner.appendChild(hdr);
+  
+  var body=document.createElement('div'); body.className='mbody';
+  var qn=document.createElement('div'); qn.className='qn'; qn.textContent='📌 السؤال '+(quizSt.q+1)+' / '+tot; body.appendChild(qn);
+  var qt=document.createElement('div'); qt.className='qt'; qt.textContent=q.q; body.appendChild(qt);
+  var cw=document.createElement('div'); cw.className='choices';
+  var ltrs=['أ','ب','ج','د'];
+  q.ch.forEach(function(ch,i){
+    var btn=document.createElement('button'); btn.className='ch'; btn.id='ch'+i;
+    btn.innerHTML='<span class="chl">'+ltrs[i]+'</span>'+ch;
+    btn.addEventListener('click',function(){selCh(i);});
+    cw.appendChild(btn);
+  });
+  body.appendChild(cw);
+  var nb=document.createElement('button'); nb.className='qnxt'; nb.id='qn'; nb.disabled=true;
+  nb.textContent=quizSt.q<tot-1?'التالي ←':'إنهاء الاختبار ✓';
+  nb.addEventListener('click',function(){nextQ(b.id);}); body.appendChild(nb);
+  inner.appendChild(body);
+  
+  quizSt.timer=setInterval(function(){
+    quizSt.time--;
+    var tfEl=document.getElementById('tf');
+    if(tfEl){tfEl.style.width=(quizSt.time/150*100)+'%';tfEl.style.background=quizSt.time<30?'#ef4444':'#ffe07a';}
+    if(quizSt.time<=0){clearInterval(quizSt.timer);showResult(b.id);}
+  },1000);
+}
+
+function selCh(i){
+  if(quizSt.sel!==null)return;
+  quizSt.sel=i;
+  document.querySelectorAll('.ch').forEach(function(c){c.classList.remove('sel');});
+  var el=document.getElementById('ch'+i); if(el)el.classList.add('sel');
+  var nb=document.getElementById('qn'); if(nb)nb.disabled=false;
+}
+
+function nextQ(bid){
+  var questions=quizSt.shuffled||QQ;
+  if(quizSt.sel===questions[quizSt.q].ok)quizSt.score++;
+  if(quizSt.q<questions.length-1){quizSt.q++;renderQ(DB.g('books').find(function(b){return b.id===bid;}));}
+  else{clearInterval(quizSt.timer);showResult(bid);}
+}
+
+function showResult(bookId){
+  clearInterval(quizSt.timer);
+  var questions=quizSt.shuffled||QQ; var tot=questions.length;
+  var passed=quizSt.score>=3;
+  var b=DB.g('books').find(function(x){return x.id===bookId;});
+  var pts=passed?(quizSt.score*(parseInt(b&&b.pts)||30)):0;
+  if(passed){
+    var stu=getStu();
+    if(stu){
+      var st=DB.g('students');
+      var idx=st.findIndex(function(s){return s.id===stu.id;});
+      if(idx>=0){
+        if(!st[idx].books.includes(bookId))st[idx].books.push(bookId);
+        st[idx].pts=(st[idx].pts||0)+pts;
+        if(!st[idx].scores)st[idx].scores={};
+        st[idx].scores[bookId]=quizSt.score;
+        DB.s('students',st);updPts();
+        // Save to Supabase if enabled
+        if(supaEnabled)DB_supa.saveRecord(stu.id,bookId,quizSt.score,pts);
+      }
+    }
+  }
+  document.getElementById('quizInner').innerHTML=
+    '<div class="result">'
+    +'<div class="rico">'+(passed?'🎉':'📚')+'</div>'
+    +'<div style="font-size:19px;font-weight:900;color:var(--navy)">'+(passed?'ممتاز! اجتزت الاختبار':'حاول مرة أخرى')+'</div>'
+    +'<div class="rscore">'+quizSt.score+'/'+tot+'</div>'
+    +(passed?'<div class="rpts">⭐ +'+pts+' نقطة أُضيفت</div>':'')
+    +'<div style="font-size:13px;color:var(--muted);margin-bottom:13px;line-height:1.7">'
+    +(passed?'تم إضافة "'+b.title+'" لملفك القرائي!':'تحتاج 3 إجابات صحيحة على الأقل — راجع الكتاب.')+'</div>'
+    +'<div style="display:flex;gap:9px;justify-content:center;flex-wrap:wrap">'
+    +(!passed?'<button class="btn bp" onclick="openQuiz(\''+bookId+'\')">🔄 إعادة المحاولة</button>':'')
+    +'<button class="btn bo2" onclick="closeQuiz()">✕ إغلاق</button>'
+    +'</div></div>';
+}
+
+function closeQuiz(){ clearInterval(quizSt.timer); document.getElementById('quizModal').style.display='none'; if(CU&&CU.role==='student')rStuHome(); }
+
+// ════════════════════════════════════════════════════
+//  TOAST
+// ════════════════════════════════════════════════════
+var tTmr;
+function toast(msg){ var t=document.getElementById('toast');t.textContent=msg;t.style.opacity='1';clearTimeout(tTmr);tTmr=setTimeout(function(){t.style.opacity='0';},3500); }
+
+
+
+// ════════════════════════════════════════════════════
+//  CURATED DIGITAL BOOKS RENDER
+// ════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════
+//  قائمة الكتب الرقمية المعتمدة — آمنة ومُراجَعة
+// ════════════════════════════════════════════════════
+var CURATED_DIGITAL = [
+  {id:'h1',title:'ألف ليلة وليلة',author:'تراث عربي',subject:'قصص وروايات',level:'الحلقة الثانية (الصف 6-8)',icon:'🌙',link:'https://www.hindawi.org/books/27517282/',src:'هنداوي'},
+  {id:'h2',title:'الأيام',author:'طه حسين',subject:'سيرة وتاريخ',level:'الحلقة الثالثة (الصف 9-12)',icon:'📖',link:'https://www.hindawi.org/books/66541742/',src:'هنداوي'},
+  {id:'h3',title:'كليلة ودمنة',author:'ابن المقفع',subject:'قصص وروايات',level:'الحلقة الثانية (الصف 6-8)',icon:'🦁',link:'https://www.hindawi.org/books/77270567/',src:'هنداوي'},
+  {id:'h4',title:'الفيزياء الممتعة',author:'يا بيريلمان',subject:'علوم وطبيعة',level:'الحلقة الثانية (الصف 6-8)',icon:'⚡',link:'https://www.hindawi.org/books/41713576/',src:'هنداوي'},
+  {id:'h5',title:'في الشعر الجاهلي',author:'طه حسين',subject:'شعر وأدب',level:'الحلقة الثالثة (الصف 9-12)',icon:'📜',link:'https://www.hindawi.org/books/50531029/',src:'هنداوي'},
+  {id:'h6',title:'علم الفلك',author:'أحمد زكي',subject:'علوم وطبيعة',level:'الحلقة الثانية (الصف 6-8)',icon:'🌟',link:'https://www.hindawi.org/books/82969871/',src:'هنداوي'},
+  {id:'h7',title:'تاريخ الفلسفة اليونانية',author:'يوسف كرم',subject:'سيرة وتاريخ',level:'الحلقة الثالثة (الصف 9-12)',icon:'🏛️',link:'https://www.hindawi.org/books/48284820/',src:'هنداوي'},
+  {id:'h8',title:'قصص من الأدب العالمي',author:'متعدد',subject:'قصص وروايات',level:'الحلقة الأولى (الصف 1-5)',icon:'🌍',link:'https://www.hindawi.org/books/40462929/',src:'هنداوي'},
+  {id:'h9',title:'الرياضيات بلا أسرار',author:'ميكايل تومس',subject:'رياضيات ومنطق',level:'الحلقة الثانية (الصف 6-8)',icon:'🔢',link:'https://www.hindawi.org/books/62073082/',src:'هنداوي'},
+  {id:'a1',title:'تراث الإمارات الرقمي',author:'دائرة الثقافة أبوظبي',subject:'وطني إماراتي',level:'جميع المراحل',icon:'🇦🇪',link:'https://ar.library.dctabudhabi.ae',src:'مكتبة أبوظبي'},
+  {id:'s1',title:'مكتبة الشارقة',author:'حكومة الشارقة',subject:'متنوع',level:'جميع المراحل',icon:'📚',link:'https://catalog.shjlib.gov.ae/en/',src:'مكتبة الشارقة'},
+];
+
+// ════════════════════════════════════════════════════
+//  نظام حماية الروابط — Domain Filter
+// ════════════════════════════════════════════════════
+var ALLOWED_DOMAINS = [
+  'hindawi.org','ar.library.dctabudhabi.ae','library.dctabudhabi.ae',
+  'catalog.shjlib.gov.ae','ich.ae','archive.org',
+  'books.arabreadingchallenge.com','portal.moeae.kutubee.com',
+  'share.google','drive.google.com',
+];
+var BLOCKED_DOMAINS = [
+  'youtube.com','tiktok.com','instagram.com','twitter.com','x.com',
+  'facebook.com','snapchat.com','telegram.org','whatsapp.com',
+];
+
+function isDomainOk(url) {
+  try {
+    var host = new URL(url).hostname.replace('www.','');
+    if (BLOCKED_DOMAINS.some(function(d){return host.includes(d);})) {
+      return {ok:false, msg:'🚫 هذا الموقع غير مسموح به (تواصل اجتماعي)'};
+    }
+    if (ALLOWED_DOMAINS.some(function(d){return host.includes(d);})) {
+      return {ok:true};
+    }
+    return {ok:true, warn:true};
+  } catch(e){ return {ok:true}; }
+}
+
+// Wrap openInBrowser with domain check
+var _openRaw = null; // will be set after openInBrowser is defined
+function safeOpenInBrowser(url, title) {
+  if (!url || url === '#') return;
+  var chk = isDomainOk(url);
+  if (!chk.ok) { toast(chk.msg); return; }
+  openInBrowser(url, title);
+}
+
+
+var _curatedFilter = 'all';
+
+function filterCurated(f) {
+  _curatedFilter = f;
+  rCurated();
+  // Update button styles
+  document.querySelectorAll('#curatedFilter button').forEach(function(btn){
+    btn.classList.remove('bp');
+    btn.classList.add('bo2');
+  });
+  event.target.classList.remove('bo2');
+  event.target.classList.add('bp');
+}
+
+function rCurated() {
+  var books = CURATED_DIGITAL.filter(function(b){
+    if (_curatedFilter === 'all') return true;
+    return b.level.includes(_curatedFilter);
+  });
+  var lvlColors = {
+    'KG — مرحلة الروضة':'#f5a623',
+    'الحلقة الأولى (الصف 1-5)':'#0d8a79',
+    'الحلقة الثانية (الصف 6-8)':'#1a73be',
+    'الحلقة الثالثة (الصف 9-12)':'#b83232',
+    'جميع المراحل':'#4c1d95'
+  };
+  var catBg = {
+    'قصص وروايات':'linear-gradient(135deg,#fce7f3,#fbcfe8)',
+    'شعر وأدب':'linear-gradient(135deg,#f0f9ff,#e0f2fe)',
+    'سيرة وتاريخ':'linear-gradient(135deg,#f3e8ff,#e9d5ff)',
+    'علوم وطبيعة':'linear-gradient(135deg,#e0f2fe,#bae6fd)',
+    'وطني إماراتي':'linear-gradient(135deg,#dcfce7,#bbf7d0)',
+    'فنون وإبداع':'linear-gradient(135deg,#fef9c3,#fde68a)',
+  };
+  document.getElementById('curatedGrid').innerHTML = books.map(function(b){
+    var lc = lvlColors[b.level] || '#555';
+    var bg = catBg[b.subject] || '#f0f5fc';
+    var lvShort = (b.level||'').split(' ')[0];
+    return '<div class="bk" onclick="openInBrowser(\'' + b.link + '\', \'' + b.title + '\')" style="cursor:pointer">'
+      + '<div class="bc" style="background:'+bg+'">'
+      + '<span class="bc-ico">'+b.icon+'</span>'
+      + '<span class="bvl" style="background:'+lc+'">'+lvShort+'</span>'
+      + '<span style="position:absolute;bottom:6px;right:6px;background:var(--teal);color:#fff;border-radius:999px;padding:2px 7px;font-size:9px;font-weight:700">'+b.src+'</span>'
+      + '</div>'
+      + '<div class="bi">'
+      + '<div class="bi-t">'+b.title+'</div>'
+      + '<div class="bi-a">'+b.author+'</div>'
+      + '<div class="bi-s">'+b.subject+'</div>'
+      + '<div style="font-size:10px;color:var(--green);font-weight:700;margin-top:2px">✅ كتاب معتمد</div>'
+      + '<button class="bi-btn" style="margin-top:7px">📖 اقرأ داخل المنصة</button>'
+      + '</div></div>';
+  }).join('') || '<div style="color:var(--muted);padding:20px;text-align:center">لا توجد كتب لهذه المرحلة</div>';
+}
+
+
+// ════════════════════════════════════════════════════
+//  IFRAME BROWSER — كل روابط خارجية تفتح داخل المنصة
+// ════════════════════════════════════════════════════
+var iBrowserHistory = [];
+var iBrowserCurrent = '';
+
+function openInBrowser(url, title) {
+  if (!url || url === '#') return;
+  // Store in history
+  iBrowserHistory.push(url);
+  iBrowserCurrent = url;
+  
+  // Show browser
+  var browser = document.getElementById('iBrowser');
+  browser.classList.add('on');
+  
+  // Update URL bar
+  document.getElementById('iBrowserUrl').textContent = url;
+  
+  // Update external link
+  var extLink = document.getElementById('iBrowserExtLink');
+  extLink.href = url;
+  document.getElementById('iBrowserBlockedLink').href = url;
+  
+  // Show loading
+  document.getElementById('iBrowserLoading').style.display = 'flex';
+  document.getElementById('iBrowserBlocked').classList.remove('show');
+  
+  // Load in iframe
+  var frame = document.getElementById('iBrowserFrame');
+  frame.src = url;
+  
+  // Fallback: if still loading after 8s, show blocked message
+  clearTimeout(window._ibt);
+  window._ibt = setTimeout(function(){
+    var loading = document.getElementById('iBrowserLoading');
+    if (loading.style.display !== 'none') {
+      loading.style.display = 'none';
+      document.getElementById('iBrowserBlocked').classList.add('show');
+    }
+  }, 8000);
+}
+
+function iBrowserLoaded() {
+  document.getElementById('iBrowserLoading').style.display = 'none';
+  document.getElementById('iBrowserBlocked').classList.remove('show');
+  clearTimeout(window._ibt);
+  // Try to detect if blocked
+  try {
+    var f = document.getElementById('iBrowserFrame');
+    // If we can access contentDocument, it loaded OK
+    var _ = f.contentDocument;
+  } catch(e) {
+    // Cross-origin block — show message
+    document.getElementById('iBrowserBlocked').classList.add('show');
+  }
+}
+
+function iBrowserError() {
+  document.getElementById('iBrowserLoading').style.display = 'none';
+  document.getElementById('iBrowserBlocked').classList.add('show');
+  clearTimeout(window._ibt);
+}
+
+function iBrowserBack() {
+  if (iBrowserHistory.length > 1) {
+    iBrowserHistory.pop();
+    var prev = iBrowserHistory[iBrowserHistory.length - 1];
+    openInBrowser(prev, '');
+  } else {
+    closeIBrowser();
+  }
+}
+
+function closeIBrowser() {
+  var browser = document.getElementById('iBrowser');
+  browser.classList.remove('on');
+  var frame = document.getElementById('iBrowserFrame');
+  frame.src = 'about:blank';
+  iBrowserHistory = [];
+  iBrowserCurrent = '';
+  clearTimeout(window._ibt);
+}
+
+// Override ALL external links to open inside browser
+document.addEventListener('click', function(e) {
+  var a = e.target.closest('a[href]');
+  if (!a) return;
+  var href = a.getAttribute('href');
+  if (!href || href === '#' || href.startsWith('mailto:')) return;
+  if (href.startsWith('http') || href.startsWith('//')) {
+    // Check if it has target="_blank" or is external
+    if (a.getAttribute('target') === '_blank' || 
+        !href.includes(window.location.hostname)) {
+      e.preventDefault();
+      openInBrowser(href, a.textContent||'');
+    }
+  }
+});
+
+
+function activateSupabase() {
+  var key = document.getElementById('supaKeyInput').value.trim();
+  if (!key || key.length < 20) { toast('⚠️ المفتاح قصير جداً — تأكد من نسخه كاملاً'); return; }
+  // Save key to localStorage
+  localStorage.setItem('supa_key', key);
+  SUPA_KEY = key;
+  supaEnabled = true;
+  toast('🔌 جاري الاتصال بـ Supabase...');
+  checkSupabaseStatus();
+}
+
+// Load saved key on startup
+(function(){
+  var savedKey = localStorage.getItem('supa_key');
+  if (savedKey && savedKey.length > 20) {
+    SUPA_KEY = savedKey;
+    supaEnabled = true;
+  }
+})();
+
+// ════════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════════
+document.getElementById('lr').addEventListener('change', onRole);
+setAllLogos();
+</script>
+
+<!-- ═══ IFRAME BROWSER ═══ -->
+<div class="ibrowser" id="iBrowser">
+  <div class="ib-bar">
+    <button class="ib-back" onclick="iBrowserBack()">← رجوع</button>
+    <button class="ib-home" onclick="closeIBrowser()">🏠 المنصة</button>
+    <div class="ib-url" id="iBrowserUrl">—</div>
+    <a class="ib-open" id="iBrowserExtLink" href="#" target="_blank">↗ فتح خارجي</a>
+  </div>
+  <div style="position:relative;flex:1;display:flex;flex-direction:column;">
+    <div class="ib-loading" id="iBrowserLoading">
+      <div class="ib-spin"></div>
+      <div style="font-size:15px;font-weight:700;color:var(--navy)">جاري التحميل...</div>
+      <div style="font-size:12px;color:var(--muted)">يتم فتح الموقع داخل المنصة</div>
+    </div>
+    <div class="ib-blocked" id="iBrowserBlocked">
+      <div style="font-size:48px;">🔒</div>
+      <div style="font-size:17px;font-weight:900;color:var(--navy)">هذا الموقع لا يسمح بالعرض المدمج</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.7">هذا الموقع يمنع تقنياً عرضه داخل مواقع أخرى.<br>يمكنك فتحه في نافذة منفصلة للمراجعة.</div>
+      <a class="btn bp" id="iBrowserBlockedLink" href="#" target="_blank">↗ فتح في نافذة جديدة</a>
+      <button class="btn bo2" onclick="closeIBrowser()">🏠 العودة للمنصة</button>
+    </div>
+    <iframe class="ib-frame" id="iBrowserFrame" 
+      sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation"
+      allow="fullscreen"
+      onload="iBrowserLoaded()" onerror="iBrowserError()">
+    </iframe>
+  </div>
+</div>
+
+</body>
+</html>
