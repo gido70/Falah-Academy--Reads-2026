@@ -860,9 +860,9 @@ const DL_ACCT = [
 //  ← أدخل الـ anon key من: Supabase → Settings → API
 // ════════════════════════════════════════════════════════
 var SUPA_URL = 'https://nmbbahzzogspuuvpsxud.supabase.co';
-var SUPA_KEY = 'YOUR_ANON_KEY_HERE'; // ← ضع مفتاحك هنا
+var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5tYmJhaHp6b2dzcHV1dnBzeHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MTY1MTYsImV4cCI6MjA5MzA5MjUxNn0.6yZNxZ_2ONQ-wyQSJtdvYpdJAxZfB-7C00ezEepUiqY'; // ← ضع مفتاحك هنا
 
-var supaEnabled = (SUPA_KEY !== 'YOUR_ANON_KEY_HERE');
+var supaEnabled = true; // Key embedded permanently
 
 // ── Supabase helper ──────────────────────────────────────
 var SB = {
@@ -1979,14 +1979,7 @@ function activateSupabase() {
   checkSupabaseStatus();
 }
 
-// Load saved key on startup
-(function(){
-  var savedKey = localStorage.getItem('supa_key');
-  if (savedKey && savedKey.length > 20) {
-    SUPA_KEY = savedKey;
-    supaEnabled = true;
-  }
-})();
+// Key is permanently embedded — no manual activation needed
 
 // ════════════════════════════════════════════════════
 //  INIT
