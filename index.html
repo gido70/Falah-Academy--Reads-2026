@@ -421,6 +421,48 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);direc
         <div class="bgrid" id="gbGrid"></div>
       </div>
 
+
+      <!-- ADMIN PASSWORDS PAGE -->
+      <div class="pg" id="pg-admin-passwords">
+        <div class="ph"><div class="ph-in"><div class="ph-t">
+          <div class="ph-title">🔑 إدارة كلمات المرور</div>
+          <div class="ph-sub">عرض وتعديل كلمات مرور المدارس — للأدمن فقط</div>
+        </div></div></div>
+
+        <!-- بطاقات كلمات المرور -->
+        <div class="sec">🏫 كلمات مرور المدارس الست</div>
+        <div id="pwdCardsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-bottom:20px"></div>
+
+        <!-- تعديل كلمة مرور -->
+        <div class="card">
+          <div class="ct">✏️ تعديل كلمة مرور مدرسة</div>
+          <div class="fg">
+            <div class="fld"><label>المدرسة</label>
+              <select id="pwd-school"></select>
+            </div>
+            <div class="fld"><label>الدور</label>
+              <select id="pwd-role">
+                <option value="lib">📚 أخصائي المكتبة</option>
+                <option value="dir">🏫 مدير المدرسة</option>
+              </select>
+            </div>
+            <div class="fld"><label>كلمة المرور الجديدة</label>
+              <input id="pwd-new" placeholder="أدخل كلمة مرور جديدة...">
+            </div>
+            <div class="fld" style="justify-content:flex-end;align-items:flex-end">
+              <button class="btn bo2 bs" onclick="genPassword()">🎲 توليد تلقائي</button>
+            </div>
+          </div>
+          <button class="btn bp" style="margin-top:11px" onclick="savePassword()">💾 حفظ كلمة المرور</button>
+        </div>
+
+        <!-- رسائل منسقة للإرسال -->
+        <div class="card">
+          <div class="ct">📤 رسائل جاهزة للإرسال للمسؤولين</div>
+          <div id="pwdMessages"></div>
+        </div>
+      </div>
+
       <!-- EVENTS PAGE -->
       <div class="pg" id="pg-events">
         <div class="ph"><div class="ph-in">
@@ -429,6 +471,44 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);direc
         </div></div>
         <div class="sec">🌟 الفعاليات الكبرى</div>
         <div class="ev-grid" id="evGrid"></div>
+      </div>
+
+
+      <!-- BANNED CHECK PAGE -->
+      <div class="pg" id="pg-banned-check">
+        <div class="ph"><div class="ph-in"><div class="ph-t">
+          <div class="ph-title">🚫 فلتر المحظورات — وزارة التربية 2025</div>
+          <div class="ph-sub">تحقق من أي كتاب قبل إضافته للمنصة</div>
+        </div></div></div>
+
+        <!-- اختبار فوري -->
+        <div class="card" style="border:2px solid var(--teal)">
+          <div class="ct" style="color:var(--teal)">🔍 اختبر أي كتاب الآن</div>
+          <div class="fg">
+            <div class="fld"><label>عنوان الكتاب</label><input id="bc-title" placeholder="أدخل عنوان الكتاب..."></div>
+            <div class="fld"><label>اسم المؤلف</label><input id="bc-author" placeholder="أدخل اسم المؤلف..."></div>
+            <div class="fld"><label>دار النشر</label><input id="bc-pub" placeholder="اسم دار النشر..."></div>
+            <div class="fld" style="justify-content:flex-end;align-items:flex-end">
+              <button class="btn bp" onclick="testBanned()">🔍 تحقق الآن</button>
+            </div>
+          </div>
+          <div id="bc-result" style="margin-top:14px;display:none"></div>
+        </div>
+
+        <!-- إحصائيات القائمة -->
+        <div class="sec">📊 إحصائيات قائمة المحظورات</div>
+        <div class="krow">
+          <div class="kpi" style="--kc:#b83232"><div class="ki">👤</div><div class="kn">277</div><div class="kl">مؤلف محظور</div></div>
+          <div class="kpi" style="--kc:#b83232"><div class="ki">🏢</div><div class="kn">113</div><div class="kl">دار نشر محظورة</div></div>
+          <div class="kpi" style="--kc:#b83232"><div class="ki">📖</div><div class="kn">131</div><div class="kl">كتاب محظور</div></div>
+          <div class="kpi" style="--kc:#0a6b52"><div class="ki">✅</div><div class="kn">تلقائي</div><div class="kl">فلتر عند الإضافة</div></div>
+        </div>
+
+        <!-- عينة من القائمة -->
+        <div class="sec">عينة من المؤلفين المحظورين</div>
+        <div class="card">
+          <div style="display:flex;flex-wrap:wrap;gap:8px" id="bannedSample"></div>
+        </div>
       </div>
 
       <!-- DIGITAL LIBRARIES -->
@@ -1221,7 +1301,8 @@ function buildNav(){
         {id:'admin-home',i:'🏠',l:'لوحة التحكم'},
         {id:'admin-schools',i:'🏫',l:'إدارة المدارس',b:DB.g('schools').length},
         {id:'admin-books',i:'📚',l:'الكتب العامة'},
-        {id:'admin-deploy',i:'🚀',l:'رفع على GitHub'},
+        {id:'admin-passwords',i:'🔑',l:'كلمات المرور'},
+        {id:'banned-check',i:'🚫',l:'فلتر المحظورات'},
         {id:'curated',i:'📗',l:'كتب رقمية معتمدة'},
         {id:'events',i:'🏆',l:'الفعاليات',n:'جديد'},
         {id:'digital',i:'📱',l:'المكتبات الرقمية'},
@@ -1274,7 +1355,8 @@ var RENDERS = {
   'admin-home':rAdminHome,'admin-schools':rAdminSchools,'admin-books':rAdminBooks,
   'events':rEvents,'digital':rDigital,
   'curated':rCurated,
-  'admin-deploy':function(){},
+  'admin-passwords':rAdminPasswords,
+  'banned-check':rBannedCheck,
   'lib-home':rLibHome,'lib-books':rLibBooks,'lib-students':rLibStudents,
   'stu-home':rStuHome,'stu-profile':rStuProfile,'dir-home':rDirHome
 };
@@ -1284,6 +1366,24 @@ function renderPg(id){ if(RENDERS[id])RENDERS[id](); }
 //  HELPERS
 // ════════════════════════════════════════════════════
 function gv(id){ var e=document.getElementById(id); return e?e.value:''; }
+
+function getStuLevel(grade) {
+  if (!grade) return '';
+  if (grade.includes('روضة') || grade.includes('KG')) return 'KG';
+  var nums = {'الأول':1,'الثاني':2,'الثالث':3,'الرابع':4,'الخامس':5,
+              'السادس':6,'السابع':7,'الثامن':8,
+              'التاسع':9,'العاشر':10,'الحادي عشر':11,'الثاني عشر':12};
+  for (var n in nums) {
+    if (grade.includes(n)) {
+      var num = nums[n];
+      if (num <= 5)  return 'الأولى';
+      if (num <= 8)  return 'الثانية';
+      if (num <= 12) return 'الثالثة';
+    }
+  }
+  return '';
+}
+
 function getStu(){ if(CU.role!=='student')return null; var s=DB.g('students'); return s.find(function(x){return x.id===CU.stuId;})||s.filter(function(x){return x.school===CU.school;})[0]; }
 function updPts(){ var s=getStu(); if(s)document.getElementById('tbPtsN').textContent=s.pts; }
 function gradeInfo(n){
@@ -1466,7 +1566,13 @@ function rStuHome(){
   document.getElementById('stuRI').textContent=rk.i;
   document.getElementById('stuRN').textContent=rk.l;
   document.getElementById('stuStats').innerHTML=[{v:stu.books.length,l:'كتاب'},{v:stu.pts,l:'نقطة'},{v:gradeInfo(stu.books.length).l,l:'الدرجة'}].map(function(x){return '<div class="phs"><div class="phs-n">'+x.v+'</div><div class="phs-l">'+x.l+'</div></div>';}).join('');
-  var books=DB.g('books').filter(function(b){return b.global||b.school===CU.school;});
+  var allBooks=DB.g('books').filter(function(b){return b.global||b.school===CU.school;});
+  // Filter by student's grade level
+  var stuLevel = getStuLevel(stu.grade);
+  var books = allBooks.filter(function(b){
+    if(!b.level || b.level==='جميع المراحل') return true;
+    return b.level.includes(stuLevel);
+  });
   document.getElementById('stuBGrid').innerHTML=books.map(function(b){return bkCard(b,true,stu.books.includes(b.id));}).join('');
   var sts=DB.g('students').filter(function(s){return s.school===CU.school;});
   var sorted=[].concat(sts).sort(function(a,b){return b.books.length-a.books.length;});
@@ -1753,6 +1859,126 @@ function closeQuiz(){ clearInterval(quizSt.timer); document.getElementById('quiz
 var tTmr;
 function toast(msg){ var t=document.getElementById('toast');t.textContent=msg;t.style.opacity='1';clearTimeout(tTmr);tTmr=setTimeout(function(){t.style.opacity='0';},3500); }
 
+
+
+
+// ════════════════════════════════════════════════════
+//  PASSWORD MANAGEMENT
+// ════════════════════════════════════════════════════
+function rAdminPasswords() {
+  var schools = DB.g('schools');
+  // Fill school select
+  var sel = document.getElementById('pwd-school');
+  if (sel) sel.innerHTML = schools.map(function(s){
+    return '<option value="'+s.id+'">'+s.icon+' '+s.name+'</option>';
+  }).join('');
+
+  // Password cards
+  var grid = document.getElementById('pwdCardsGrid');
+  if (grid) grid.innerHTML = schools.map(function(s){
+    return '<div class="card" style="border-top:3px solid var(--blue)">'
+      +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">'
+      +'<span style="font-size:28px">'+s.icon+'</span>'
+      +'<div><div style="font-size:15px;font-weight:900;color:var(--navy)">'+s.name+'</div>'
+      +'<div style="font-size:11px;color:var(--muted)">'+s.city+'</div></div></div>'
+      +'<div style="background:var(--bg);border-radius:10px;padding:10px;margin-bottom:8px">'
+      +'<div style="font-size:11px;color:var(--muted);margin-bottom:4px">📚 أخصائي: '+(s.libName||'—')+'</div>'
+      +'<div style="display:flex;align-items:center;gap:8px">'
+      +'<code style="flex:1;background:#e6f0fb;padding:6px 10px;border-radius:7px;font-size:12px;color:var(--blue)">'+s.libPass+'</code>'
+      +'<button class="btn bo2 bs" onclick="copyText(''+s.libPass+'')">📋</button></div></div>'
+      +'<div style="background:var(--bg);border-radius:10px;padding:10px">'
+      +'<div style="font-size:11px;color:var(--muted);margin-bottom:4px">🏫 مدير: '+(s.dirName||'—')+'</div>'
+      +'<div style="display:flex;align-items:center;gap:8px">'
+      +'<code style="flex:1;background:#e6f0fb;padding:6px 10px;border-radius:7px;font-size:12px;color:var(--blue)">'+s.dirPass+'</code>'
+      +'<button class="btn bo2 bs" onclick="copyText(''+s.dirPass+'')">📋</button></div></div>'
+      +'</div>';
+  }).join('');
+
+  // Formatted messages
+  var msgs = document.getElementById('pwdMessages');
+  if (msgs) msgs.innerHTML = schools.map(function(s){
+    var msg = 'السلام عليكم '+s.libName+'،\n'
+      +'بيانات دخولك لمنصة الفلاح للقراءة:\n'
+      +'🔗 الرابط: https://gido70.github.io/Falah-Academy--Reads-2026/\n'
+      +'🏫 المدرسة: '+s.name+'\n'
+      +'👤 الدور: أخصائي مكتبة\n'
+      +'🔑 كلمة المرور: '+s.libPass+'\n'
+      +'مع تحياتي — إدارة أكاديمية الفلاح';
+    return '<div style="border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px">'
+      +'<div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">'+s.icon+' رسالة '+s.name+'</div>'
+      +'<textarea readonly style="width:100%;height:120px;border:1px solid var(--border);border-radius:8px;padding:8px;font-family:Cairo,sans-serif;font-size:12px;background:var(--bg);resize:none">'+msg+'</textarea>'
+      +'<button class="btn bo2 bs" style="margin-top:6px" onclick="copyText(`'+msg+'`)">📋 نسخ الرسالة</button>'
+      +'</div>';
+  }).join('');
+}
+
+function genPassword() {
+  var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  var pwd = '';
+  for (var i=0;i<10;i++) pwd += chars[Math.floor(Math.random()*chars.length)];
+  var el = document.getElementById('pwd-new');
+  if (el) el.value = pwd;
+}
+
+function savePassword() {
+  var schoolId = document.getElementById('pwd-school').value;
+  var role = document.getElementById('pwd-role').value;
+  var newPwd = document.getElementById('pwd-new').value.trim();
+  if (!newPwd) { toast('⚠️ أدخل كلمة المرور الجديدة'); return; }
+  var schools = DB.g('schools');
+  var idx = schools.findIndex(function(s){return s.id===schoolId;});
+  if (idx < 0) return;
+  if (role === 'lib') schools[idx].libPass = newPwd;
+  else schools[idx].dirPass = newPwd;
+  DB.s('schools', schools);
+  toast('✅ تم تحديث كلمة المرور — '+schools[idx].name);
+  rAdminPasswords();
+}
+
+function copyText(txt) {
+  navigator.clipboard.writeText(txt).then(function(){
+    toast('📋 تم النسخ');
+  }).catch(function(){
+    toast('⚠️ لم يتم النسخ — انسخ يدوياً');
+  });
+}
+
+// ════════════════════════════════════════════════════
+//  BANNED CHECK PAGE
+// ════════════════════════════════════════════════════
+function rBannedCheck() {
+  // Show sample banned authors
+  var sample = BANNED_AUTHORS.slice(0, 20);
+  var el = document.getElementById('bannedSample');
+  if (el) el.innerHTML = sample.map(function(a){
+    return '<span style="background:#fce8e8;color:var(--red);border:1px solid #f5a5a5;border-radius:999px;padding:4px 12px;font-size:12px;font-weight:700">🚫 '+a+'</span>';
+  }).join('') + '<span style="color:var(--muted);font-size:12px;padding:4px">... و257 آخرين</span>';
+}
+
+function testBanned() {
+  var title  = document.getElementById('bc-title').value.trim();
+  var author = document.getElementById('bc-author').value.trim();
+  var pub    = document.getElementById('bc-pub').value.trim();
+  if (!title && !author) { toast('⚠️ أدخل العنوان أو المؤلف على الأقل'); return; }
+  var result = checkBanned(title, author, pub);
+  var el = document.getElementById('bc-result');
+  el.style.display = 'block';
+  if (result.banned) {
+    el.innerHTML = '<div style="background:#fce8e8;border:2px solid var(--red);border-radius:12px;padding:16px;display:flex;align-items:center;gap:14px">'
+      +'<span style="font-size:36px">🚫</span>'
+      +'<div><div style="font-size:16px;font-weight:900;color:var(--red)">هذا الكتاب محظور</div>'
+      +'<div style="font-size:13px;color:var(--red);margin-top:4px">'+result.reason+'</div>'
+      +'<div style="font-size:12px;color:var(--muted);margin-top:6px">وفقاً لقائمة وزارة التربية والتعليم — الإصدار الثاني 2025</div>'
+      +'</div></div>';
+  } else {
+    el.innerHTML = '<div style="background:#e0f7f0;border:2px solid var(--green);border-radius:12px;padding:16px;display:flex;align-items:center;gap:14px">'
+      +'<span style="font-size:36px">✅</span>'
+      +'<div><div style="font-size:16px;font-weight:900;color:var(--green)">الكتاب مسموح به</div>'
+      +'<div style="font-size:13px;color:var(--green);margin-top:4px">لم يُعثر على تطابق في قوائم المحظورات</div>'
+      +'<div style="font-size:12px;color:var(--muted);margin-top:6px">يمكن إضافته للمنصة</div>'
+      +'</div></div>';
+  }
+}
 
 
 // ════════════════════════════════════════════════════
