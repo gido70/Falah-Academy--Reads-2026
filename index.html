@@ -275,6 +275,23 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);direc
 .ib-blocked{position:absolute;inset:52px 0 0;background:#f4f8fd;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:30px;text-align:center;}
 .ib-blocked.show{display:flex;}
 
+/* BOOK GROUPS - added */
+.book-folder-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:13px;margin-bottom:14px;}
+.book-folder{background:#fff;border:1.5px solid var(--border);border-radius:16px;padding:14px;box-shadow:0 2px 8px rgba(13,74,138,.06);}
+.book-folder h3{font-size:14px;font-weight:900;color:var(--navy);margin-bottom:8px;display:flex;justify-content:space-between;gap:8px;align-items:center;}
+.book-folder .meta{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:8px;}
+.level-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0 14px;}
+.level-tab{background:#f8fbff;border:1.5px solid var(--border);border-radius:12px;padding:10px;text-align:center;}
+.level-tab strong{display:block;color:var(--navy);font-size:15px;}
+.level-tab span{font-size:10px;color:var(--muted);font-weight:700;}
+.book-group{background:#fff;border:1px solid var(--border);border-radius:16px;padding:12px;margin-bottom:12px;}
+.book-group-title{font-size:14px;font-weight:900;color:var(--navy);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid var(--border);padding-bottom:8px;}
+.preview-row{display:flex;align-items:center;gap:8px;padding:6px 11px;border-bottom:1px solid var(--border);font-size:12px;}
+.preview-row:last-child{border-bottom:none;}
+.preview-del{background:#fce8e8;color:var(--red);border:1px solid #f5a5a5;border-radius:7px;padding:3px 8px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:11px;font-weight:700;}
+.book-del-btn{width:100%;margin-top:6px;background:#fce8e8;color:var(--red);border:1px solid #f5a5a5;border-radius:8px;padding:6px;font-family:'Cairo',sans-serif;font-size:11px;font-weight:700;cursor:pointer;}
+@media(max-width:700px){.level-tabs{grid-template-columns:1fr 1fr}.book-folder-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -419,6 +436,8 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);direc
         </div>
         <div class="sec">الكتب العامة المضافة</div>
         <div class="bgrid" id="gbGrid"></div>
+        <div class="sec">🏫 كتب المدارس الخاصة</div>
+        <div id="adminSchoolBooks"></div>
       </div>
 
 
@@ -571,31 +590,14 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);direc
           <button class="btn bp" style="margin-top:11px" onclick="addSBook()">➕ إضافة لمكتبة مدرستك</button>
         </div>
         <div class="sec">📖 كتب مدرستك الخاصة</div>
-        <div class="bgrid" id="sbGrid"></div>
+        <div id="sbGrid"></div>
         <div class="sec">🌐 الكتب العامة (من الأدمن)</div>
-        <div class="bgrid" id="gbLibGrid"></div>
+        <div id="gbLibGrid"></div>
       </div>
 
       <!-- LIB STUDENTS -->
       <div class="pg" id="pg-lib-students">
         <div class="ph"><div class="ph-in"><div class="ph-t"><div class="ph-title">👥 إدارة الطلاب</div><div class="ph-sub">تسجيل ومتابعة طلاب مكتبتك</div></div></div></div>
-        <div class="xz">
-          <div class="xz-h">📊 رفع قائمة طلاب من Excel</div>
-          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-            <label class="xdrop" style="flex:1;flex-direction:row;gap:9px;padding:11px" ondragover="event.preventDefault()" ondrop="onStuXlsDrop(event)">
-              <span style="font-size:24px">👥</span>
-              <div><div style="font-size:13px;font-weight:700;color:var(--navy)">رفع Excel الطلاب</div><div style="font-size:11px;color:var(--muted)">اسم الطالب | الرقم الدراسي | الصف | الفصل</div></div>
-              <input type="file" id="xlsStu" accept=".xlsx,.xls,.csv" style="display:none" onchange="parseStuXls(this.files[0])">
-            </label>
-            <button class="btn bt bs" onclick="document.getElementById('xlsStu').click()">📊 اختيار</button>
-            <button class="btn bo2 bs" onclick="dlStudentTemplate()">📥 نموذج طلاب</button>
-          </div>
-          <div class="xprev" id="xpStu">
-            <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:5px" id="xpStuTitle"></div>
-            <div class="xplist" id="xpStuList"></div>
-            <button class="btn bp bs" style="margin-top:7px" onclick="importStuXls()">✅ إضافة الطلاب</button>
-          </div>
-        </div>
         <div class="card">
           <div class="ct">تسجيل طالب جديد</div>
           <div class="fg">
@@ -1635,8 +1637,7 @@ var DB_supa = {
     await SB.post('fr_schools', {
       id:sc.id, name:sc.name, city:sc.city, icon:sc.icon,
       lib_name:sc.libName, lib_pass:sc.libPass,
-      dir_name:sc.dirName, dir_pass:sc.dirPass,
-      active: sc.active !== false
+      dir_name:sc.dirName, dir_pass:sc.dirPass
     });
   },
   // Add book
@@ -1654,26 +1655,24 @@ var DB_supa = {
     if (!supaEnabled) return;
     await SB.post('fr_students', {
       id:st.id, school_id:st.school, name:st.name,
-      grade:st.grade, class:st.cls, pts:st.pts||0
+      grade:st.grade, class:st.cls, pts:0
     });
   },
-  // Update school active status
-  updateSchoolActive: async function(id, active) {
+  setSchoolActive: async function(id, active) {
     if (!supaEnabled) return;
     await SB.patch('fr_schools', 'id=eq.'+encodeURIComponent(id), {active: active});
   },
-  // Delete school
-  deleteSchool: async function(id) {
+  deleteBook: async function(id) {
     if (!supaEnabled) return;
-    await SB.del('fr_schools', 'id=eq.'+encodeURIComponent(id));
+    await SB.del('fr_books','id=eq.'+encodeURIComponent(id));
   }
 };
 
 // ── SYNC: load from Supabase and cache in localStorage ──
-async function syncFromSupabase(silent) {
-  if (!supaEnabled) return false;
+async function syncFromSupabase() {
+  if (!supaEnabled) return;
   try {
-    if (!silent) toast('🔄 جاري التزامن مع قاعدة البيانات...');
+    toast('🔄 جاري التزامن مع قاعدة البيانات...');
     var [schools, books, students] = await Promise.all([
       DB_supa.getSchools(),
       DB_supa.getBooks(),
@@ -1682,12 +1681,10 @@ async function syncFromSupabase(silent) {
     if (schools && schools.length) DB.s('schools', schools);
     if (books && books.length) DB.s('books', books);
     if (students && students.length) DB.s('students', students);
-    if (!silent) toast('✅ تم التزامن مع قاعدة البيانات');
-    return true;
+    toast('✅ تم التزامن مع قاعدة البيانات');
   } catch(e) {
     console.error('Supabase sync error:', e);
-    if (!silent) toast('⚠️ تعذّر التزامن — يعمل محلياً');
-    return false;
+    toast('⚠️ تعذّر التزامن — يعمل محلياً');
   }
 }
 
@@ -1705,7 +1702,7 @@ async function checkSupabaseStatus() {
     if (r.ok) {
       statusEl.textContent = '✅ Supabase متصل — بيانات مزامنة';
       statusEl.style.color = '#0a6b52';
-      syncFromSupabase(false);
+      syncFromSupabase();
     } else {
       statusEl.textContent = '❌ خطأ في الاتصال — تحقق من المفتاح';
       statusEl.style.color = '#b83232';
@@ -1775,15 +1772,10 @@ var QQ = [
   DB.d('students', ST0);
 })();
 
-// مزامنة مبكرة قبل اختيار الدور حتى تظهر المدارس والكتب المرفوعة في Supabase
-if (supaEnabled) {
-  syncFromSupabase(true).then(function(){
-    if (document.getElementById('lr') && document.getElementById('lr').value) onRole();
-  });
-}
-
 var CU = null;
-var xlsP = {admin:[], lib:[], students:[]};
+var xlsP = {admin:[], lib:[]};
+var xlsRejected = {admin:[], lib:[]};
+var xlsFileName = {admin:"", lib:""};
 var quizSt = {};
 
 // ════════════════════════════════════════════════════
@@ -1796,7 +1788,7 @@ function onRole(){
   var cl = document.getElementById('codeLabel');
   if (['director','librarian','student'].includes(role)){
     sd.style.display = 'block';
-    ss.innerHTML = (DB.g('schools')||[]).filter(function(s){return s.active !== false;}).map(function(s){
+    ss.innerHTML = DB.g('schools').filter(function(s){return s.active;}).map(function(s){
       return '<option value="'+s.id+'">'+s.icon+' '+s.name+' — '+s.city+'</option>';
     }).join('');
     cl.textContent = role==='student' ? 'الرقم الدراسي (= كلمة المرور)' : 'كلمة المرور';
@@ -1997,30 +1989,7 @@ function calcScore(s){ var n=s.books.length; var r=Object.values(s.scores||{}); 
 function rankInfo(n){ if(n>=25)return{i:'💎',l:'القارئ الماسي'}; if(n>=12)return{i:'🌟',l:'القارئ الذهبي'}; if(n>=7)return{i:'🥈',l:'قارئ متميز'}; if(n>=4)return{i:'📖',l:'قارئ نشط'}; if(n>=1)return{i:'🌱',l:'قارئ ناشئ'}; return{i:'📚',l:'ابدأ القراءة'}; }
 function krow(el,items){ if(!el)return; el.innerHTML=items.map(function(k){ return '<div class="kpi" style="--kc:'+k.c+'"><div class="ki">'+k.i+'</div><div class="kn">'+k.n+'</div><div class="kl">'+k.l+'</div></div>'; }).join(''); }
 
-
-function stageKey(level){
-  level = String(level||'جميع المراحل');
-  if(level.includes('KG') || level.includes('روضة')) return 'KG — مرحلة الروضة';
-  if(level.includes('الأولى') || level.includes('1-5')) return 'الحلقة الأولى (الصف 1-5)';
-  if(level.includes('الثانية') || level.includes('6-8')) return 'الحلقة الثانية (الصف 6-8)';
-  if(level.includes('الثالثة') || level.includes('9-12')) return 'الحلقة الثالثة (الصف 9-12)';
-  return 'جميع المراحل';
-}
-function groupedBooksHtml(books, opts){
-  opts = opts || {};
-  var order=['KG — مرحلة الروضة','الحلقة الأولى (الصف 1-5)','الحلقة الثانية (الصف 6-8)','الحلقة الثالثة (الصف 9-12)','جميع المراحل'];
-  if(!books || !books.length) return '<div style="color:var(--muted);padding:10px">لا توجد كتب بعد</div>';
-  return order.map(function(level){
-    var arr=books.filter(function(b){return stageKey(b.level)===level;});
-    if(!arr.length) return '';
-    return '<div class="card" style="padding:14px;margin-bottom:14px">'
-      +'<div class="ct"><span>📚 '+level+'</span><span class="badge bb">'+arr.length+' كتاب</span></div>'
-      +'<div class="bgrid">'+arr.map(function(b){return bkCard(b,!!opts.forStu, opts.doneFn?opts.doneFn(b):false, opts.showSchool);}).join('')+'</div>'
-      +'</div>';
-  }).join('');
-}
-
-function bkCard(b, forStu, done, showSchool){
+function bkCard(b, forStu, done, allowDelete){
   var lvlC={'KG — مرحلة الروضة':'#f5a623','الحلقة الأولى (الصف 1-5)':'#0d8a79','الحلقة الثانية (الصف 6-8)':'#1a73be','الحلقة الثالثة (الصف 9-12)':'#b83232','جميع المراحل':'#4c1d95'};
   var catBg={'قصص وروايات':'linear-gradient(135deg,#fce7f3,#fbcfe8)','شعر وأدب':'linear-gradient(135deg,#f0f9ff,#e0f2fe)','سيرة وتاريخ':'linear-gradient(135deg,#f3e8ff,#e9d5ff)','ديني قصصي':'linear-gradient(135deg,#fef3c7,#fde68a)','علوم وطبيعة':'linear-gradient(135deg,#e0f2fe,#bae6fd)','وطني إماراتي':'linear-gradient(135deg,#dcfce7,#bbf7d0)','تقنية وابتكار':'linear-gradient(135deg,#f0fdf4,#dcfce7)'};
   var lv = b.level||'';
@@ -2032,16 +2001,16 @@ function bkCard(b, forStu, done, showSchool){
       +'<span class="bc-ico">'+( b.icon||'📖')+'</span>'
     : '<span class="bc-ico">'+(b.icon||'📖')+'</span>';
   var subLine = b.subject ? '<div class="bi-s">'+b.subject+(b.year?' — '+b.year:'')+'</div>' : '';
-  var schoolLine = showSchool && b.school ? '<div class="bi-a" style="color:var(--gold);font-weight:700">🏫 '+((DB.g('schools')||[]).find(function(s){return s.id===b.school;})||{}).name+'</div>' : '';
   var lnkLine = b.link ? '<a href="'+b.link+'" target="_blank" style="font-size:10px;color:var(--blue);font-weight:700;display:block;margin-top:3px">📱 قراءة إلكترونية</a>' : '';
   var btnLine = forStu ? '<button class="bi-btn'+(done?' dn':'')+'" onclick="openQuiz(\''+b.id+'\')">'+(done?'✅ إعادة الاختبار':'📖 اقرأ واختبر')+'</button>' : '';
+  var delLine = allowDelete ? '<button class="book-del-btn" onclick="delBook(\''+b.id+'\')">🗑️ حذف الكتاب</button>' : '';
   var doneBadge = done ? '<span class="bd">✅ مكتمل</span>' : '';
   return '<div class="bk'+(done?' done':'')+'">'
     +'<div class="bc" style="background:'+bg+'">'+coverHtml
     +'<span class="bvl" style="background:'+lc+'">'+lvShort+'</span>'+doneBadge+'</div>'
     +'<div class="bi"><div class="bi-t">'+b.title+'</div><div class="bi-a">'+(b.author||'—')+'</div>'
-    +schoolLine+subLine+'<div class="bi-stars" style="font-size:10px;color:var(--orange);margin-top:2px">★★★★☆ 📄'+(b.pages||'—')+' ص</div>'
-    +lnkLine+btnLine+'</div></div>';
+    +subLine+'<div class="bi-stars" style="font-size:10px;color:var(--orange);margin-top:2px">★★★★☆ 📄'+(b.pages||'—')+' ص</div>'
+    +lnkLine+btnLine+delLine+'</div></div>';
 }
 
 // ════════════════════════════════════════════════════
@@ -2088,6 +2057,63 @@ function rDigital(){
 // ════════════════════════════════════════════════════
 //  ADMIN RENDERS
 // ════════════════════════════════════════════════════
+
+function levelGroupName(level){
+  var v=String(level||'').trim();
+  if(!v) return 'غير محدد';
+  if(v.includes('KG')||v.includes('روضة')||v.includes('الروضة')) return 'KG — الروضة';
+  if(v.includes('الأولى')||v.includes('الاولى')||v.includes('1-5')||v.includes('1 إلى 5')) return 'الحلقة الأولى (1–5)';
+  if(v.includes('الثانية')||v.includes('6-8')||v.includes('6 إلى 8')) return 'الحلقة الثانية (6–8)';
+  if(v.includes('الثالثة')||v.includes('9-12')||v.includes('9 إلى 12')||v.includes('الثانوي')) return 'الحلقة الثالثة (9–12)';
+  if(v.includes('جميع')) return 'جميع المراحل';
+  return v;
+}
+function groupBooksByLevel(books){
+  var order=['KG — الروضة','الحلقة الأولى (1–5)','الحلقة الثانية (6–8)','الحلقة الثالثة (9–12)','جميع المراحل','غير محدد'];
+  var g={}; order.forEach(function(k){g[k]=[];});
+  (books||[]).forEach(function(b){var k=levelGroupName(b.level); if(!g[k])g[k]=[]; g[k].push(b);});
+  return {order:order.concat(Object.keys(g).filter(function(k){return order.indexOf(k)<0;})), groups:g};
+}
+function renderLevelTabs(books){
+  var gg=groupBooksByLevel(books);
+  return '<div class="level-tabs">'+gg.order.filter(function(k){return ['KG — الروضة','الحلقة الأولى (1–5)','الحلقة الثانية (6–8)','الحلقة الثالثة (9–12)'].indexOf(k)>=0;}).map(function(k){return '<div class="level-tab"><strong>'+((gg.groups[k]||[]).length)+'</strong><span>'+k+'</span></div>';}).join('')+'</div>';
+}
+function renderBookGroups(books, allowDelete){
+  if(!books||!books.length) return '<div style="color:var(--muted);padding:10px">لا توجد كتب بعد</div>';
+  var gg=groupBooksByLevel(books);
+  return renderLevelTabs(books)+gg.order.filter(function(k){return (gg.groups[k]||[]).length;}).map(function(k){
+    return '<div class="book-group"><div class="book-group-title"><span>📚 '+k+'</span><span class="badge bb">'+gg.groups[k].length+' كتاب</span></div><div class="bgrid">'+gg.groups[k].map(function(b){return bkCard(b,false,false,allowDelete);}).join('')+'</div></div>';
+  }).join('');
+}
+function rAdminSchoolBooks(){
+  var sc=DB.g('schools'), bk=DB.g('books').filter(function(b){return !b.global;});
+  var el=document.getElementById('adminSchoolBooks'); if(!el)return;
+  el.innerHTML='<div class="book-folder-grid">'+sc.map(function(s){
+    var list=bk.filter(function(b){return b.school===s.id;});
+    return '<div class="book-folder"><h3><span>'+s.icon+' '+s.name+'</span><span class="badge bb">'+list.length+' كتاب</span></h3><div class="meta">'+s.city+' — كتب خاصة بهذه المدرسة فقط</div>'+renderLevelTabs(list)+'<details><summary style="cursor:pointer;color:var(--blue);font-weight:900;font-size:12px">فتح كتب المدرسة حسب المراحل</summary><div style="margin-top:10px">'+renderBookGroups(list,true)+'</div></details></div>';
+  }).join('')+'</div>';
+}
+async function delBook(id){
+  if(!confirm('حذف هذا الكتاب من القائمة؟')) return;
+  DB.s('books', DB.g('books').filter(function(b){return b.id!==id;}));
+  if(supaEnabled) await SB.del('fr_books','id=eq.'+encodeURIComponent(id));
+  if(CU && CU.role==='admin'){ rAdminBooks(); } else if(CU && CU.role==='librarian'){ rLibBooks(); }
+  toast('🗑️ تم حذف الكتاب');
+}
+function renderXlsPreview(who){
+  var parsed=xlsP[who]||[], rejected=(window.xlsRejected&&window.xlsRejected[who])||[];
+  var pid='xp'+(who==='admin'?'A':'L');
+  document.getElementById(pid).style.display='block';
+  document.getElementById(pid+'Title').textContent='📊 '+((window.xlsFileName&&window.xlsFileName[who])||'ملف Excel')+' — '+parsed.length+' كتاب مقبول'+(rejected.length?' | '+rejected.length+' مرفوض':'');
+  document.getElementById(pid+'List').innerHTML=parsed.slice(0,80).map(function(b,i){
+    return '<div class="preview-row"><span>'+b.icon+'</span><strong style="flex:1;color:var(--navy)">'+b.title+'</strong><span style="color:var(--muted)">'+(b.author||'—')+'</span><span class="badge bb" style="font-size:10px">'+levelGroupName(b.level)+'</span><button class="preview-del" onclick="delPreviewBook(\''+who+'\','+i+')">حذف</button></div>';
+  }).join('')+(parsed.length>80?'<div class="preview-row" style="color:var(--muted)">+ '+(parsed.length-80)+' كتاب آخر...</div>':'')
+    +(rejected.length?'<div style="padding:7px 11px;background:#fce8e8;font-size:11px;color:var(--red);border-radius:8px;margin-top:6px">🚫 مرفوض تلقائياً ولن يتم حفظه: '+rejected.slice(0,8).join(' | ')+(rejected.length>8?' ...':'')+'</div>':'');
+}
+function delPreviewBook(who,i){
+  if(!xlsP[who]) return; xlsP[who].splice(i,1); renderXlsPreview(who); toast('تم حذف الكتاب من قائمة الرفع قبل الحفظ');
+}
+
 function rAdminHome(){
   var sc=DB.g('schools'), st=DB.g('students'), bk=DB.g('books');
   var total=st.reduce(function(s,x){return s+x.books.length;},0);
@@ -2129,8 +2155,9 @@ function rAdminSchools(){
 }
 
 function rAdminBooks(){
-  var bk=(DB.g('books')||[]);
-  document.getElementById('gbGrid').innerHTML=groupedBooksHtml(bk,{showSchool:true});
+  var bk=DB.g('books').filter(function(b){return b.global;});
+  document.getElementById('gbGrid').innerHTML=renderBookGroups(bk,true);
+  rAdminSchoolBooks();
 }
 
 // ════════════════════════════════════════════════════
@@ -2157,10 +2184,10 @@ function rLibHome(){
 }
 
 function rLibBooks(){
-  var sb=(DB.g('books')||[]).filter(function(b){return b.school===CU.school;});
-  var gb=(DB.g('books')||[]).filter(function(b){return b.global;});
-  document.getElementById('sbGrid').innerHTML=groupedBooksHtml(sb,{});
-  document.getElementById('gbLibGrid').innerHTML=groupedBooksHtml(gb,{});
+  var sb=DB.g('books').filter(function(b){return b.school===CU.school;});
+  var gb=DB.g('books').filter(function(b){return b.global;});
+  document.getElementById('sbGrid').innerHTML=renderBookGroups(sb,true);
+  document.getElementById('gbLibGrid').innerHTML=renderBookGroups(gb,false);
 }
 
 function rLibStudents(){
@@ -2253,22 +2280,8 @@ function addSchool(){
   rAdminSchools();rAdminHome();buildNav();
   ['as-n','as-c','as-code','as-ico','as-lib','as-lp','as-dir','as-dp'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
 }
-function toggleSch(id){
-  var sc=DB.g('schools')||[];var i=sc.findIndex(function(s){return s.id===id;});
-  if(i>=0){
-    sc[i].active = !(sc[i].active !== false);
-    DB.s('schools',sc);
-    if(supaEnabled) DB_supa.updateSchoolActive(id, sc[i].active);
-  }
-  rAdminSchools();rAdminHome();buildNav();
-  toast(sc[i]&&sc[i].active?'✅ تم تفعيل المدرسة':'⏸️ تم إيقاف المدرسة');
-}
-function delSch(id){
-  if(!confirm('حذف هذه المدرسة نهائياً؟'))return;
-  DB.s('schools',(DB.g('schools')||[]).filter(function(s){return s.id!==id;}));
-  if(supaEnabled) DB_supa.deleteSchool(id);
-  rAdminSchools();rAdminHome();buildNav();toast('🗑️ تم الحذف');
-}
+async function toggleSch(id){ var sc=DB.g('schools');var i=sc.findIndex(function(s){return s.id===id;});if(i>=0){sc[i].active=!sc[i].active;DB.s('schools',sc); if(supaEnabled) await DB_supa.setSchoolActive(id, sc[i].active);}rAdminSchools();rAdminHome();onRole();toast(sc[i]&&sc[i].active?'✅ تم تفعيل المدرسة وظهورها في الدخول':'⏸️ تم إيقاف المدرسة وإخفاؤها من الدخول'); }
+function delSch(id){ if(!confirm('حذف هذه المدرسة نهائياً؟'))return;DB.s('schools',DB.g('schools').filter(function(s){return s.id!==id;}));rAdminSchools();rAdminHome();toast('🗑️ تم الحذف'); }
 
 // ════════════════════════════════════════════════════
 //  BOOK MANAGEMENT
@@ -2278,10 +2291,11 @@ function addGBook(){
   if(!t||!a){toast('⚠️ أدخل العنوان والمؤلف');return;}
   var check=checkBanned(t,a,pub);
   if(check.banned){toast('🚫 رُفض: '+check.reason);return;}
-  var bk=DB.g('books')||[];
-  var b={id:'b'+Date.now(),title:t,author:a,publisher:pub,subject:gv('gb-s'),year:gv('gb-y'),level:stageKey(gv('gb-l')),pages:parseInt(gv('gb-p'))||0,pts:parseInt(gv('gb-pt'))||30,link:gv('gb-lk').trim(),img:gv('gb-img').trim(),icon:'📖',global:true,school:null};
-  bk.push(b); DB.s('books',bk);
-  if(supaEnabled) DB_supa.addBook(b);
+  var bk=DB.g('books');
+  var newBook={id:'b'+Date.now(),title:t,author:a,publisher:pub,subject:gv('gb-s'),year:gv('gb-y'),level:gv('gb-l'),pages:parseInt(gv('gb-p'))||0,pts:parseInt(gv('gb-pt'))||30,link:gv('gb-lk').trim(),img:gv('gb-img').trim(),icon:'📖',global:true,school:null};
+  bk.push(newBook);
+  DB.s('books',bk);
+  if(supaEnabled)DB_supa.addBook(newBook);
   ['gb-t','gb-a','gb-pub','gb-y','gb-p','gb-lk','gb-img'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
   rAdminBooks();toast('✅ تمت إضافة الكتاب للمكتبة العامة');
 }
@@ -2290,21 +2304,23 @@ function addSBook(){
   if(!t||!a){toast('⚠️ أدخل العنوان والمؤلف');return;}
   var check=checkBanned(t,a,pub);
   if(check.banned){toast('🚫 رُفض: '+check.reason);return;}
-  var bk=DB.g('books')||[];
-  var b={id:'b'+Date.now(),title:t,author:a,publisher:pub,subject:gv('lb-s'),year:gv('lb-y'),level:stageKey(gv('lb-l')),pages:parseInt(gv('lb-p'))||0,pts:parseInt(gv('lb-pt'))||30,link:gv('lb-lk').trim(),img:gv('lb-img').trim(),icon:'📖',global:false,school:CU.school};
-  bk.push(b); DB.s('books',bk);
-  if(supaEnabled) DB_supa.addBook(b);
+  var bk=DB.g('books');
+  var newBook={id:'b'+Date.now(),title:t,author:a,publisher:pub,subject:gv('lb-s'),year:gv('lb-y'),level:gv('lb-l'),pages:parseInt(gv('lb-p'))||0,pts:parseInt(gv('lb-pt'))||30,link:gv('lb-lk').trim(),img:gv('lb-img').trim(),icon:'📖',global:false,school:CU.school};
+  bk.push(newBook);
+  DB.s('books',bk);
+  if(supaEnabled)DB_supa.addBook(newBook);
   ['lb-t','lb-a','lb-pub','lb-y','lb-p','lb-lk','lb-img'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
   rLibBooks();toast('✅ تمت إضافة الكتاب لمكتبة مدرستك');
 }
 function addStudent(){
   var n=gv('ns-n').trim(),id=gv('ns-id').trim();
   if(!n||!id){toast('⚠️ أدخل اسم الطالب ورقمه');return;}
-  var sts=DB.g('students')||[];
+  var sts=DB.g('students');
   if(sts.find(function(s){return s.id===id;})){toast('⚠️ الرقم موجود مسبقاً');return;}
-  var st={id:id,school:CU.school,name:n,grade:gv('ns-g'),cls:gv('ns-c'),books:[],pts:0,scores:{}};
-  sts.push(st); DB.s('students',sts);
-  if(supaEnabled) DB_supa.addStudent(st);
+  var newStudent={id:id,school:CU.school,name:n,grade:gv('ns-g'),cls:gv('ns-c'),books:[],pts:0,scores:{}};
+  sts.push(newStudent);
+  DB.s('students',sts);
+  if(supaEnabled)DB_supa.addStudent(newStudent);
   ['ns-n','ns-id','ns-c'].forEach(function(i){var e=document.getElementById(i);if(e)e.value='';});
   rLibStudents();toast('✅ تم تسجيل الطالب — باسورده: '+id);
 }
@@ -2338,13 +2354,9 @@ function parseXls(file,who){
         parsed.push({id:'b'+Date.now()+i,title:title,author:author,subject:subject,year:String(r[3]||'').trim(),level:String(r[4]||'الحلقة الثانية (الصف 6-8)').trim(),pages:parseInt(r[5])||0,link:String(r[6]||'').trim(),pts:parseInt(r[7])||30,icon:iconMap[autoI]||'📖',img:''});
       }
       xlsP[who]=parsed;
-      var pid='xp'+(who==='admin'?'A':'L');
-      document.getElementById(pid).style.display='block';
-      document.getElementById(pid+'Title').textContent='📊 '+file.name+' — '+parsed.length+' كتاب مقبول'+(rejected.length?' | '+rejected.length+' مرفوض':'');
-      document.getElementById(pid+'List').innerHTML=parsed.slice(0,8).map(function(b){
-        return '<div class="xi"><span>'+b.icon+'</span><strong style="flex:1;color:var(--navy)">'+b.title+'</strong><span style="color:var(--muted)">'+b.author+'</span><span class="badge bb" style="font-size:10px">'+b.level.split(' ')[0]+'</span></div>';
-      }).join('')+(parsed.length>8?'<div class="xi" style="color:var(--muted)">+ '+(parsed.length-8)+' كتاب...</div>':'')
-        +(rejected.length?'<div style="padding:6px 11px;background:#fce8e8;font-size:11px;color:var(--red)">🚫 مرفوض: '+rejected.slice(0,3).join(' | ')+(rejected.length>3?' ...':'')+'</div>':'');
+      xlsRejected[who]=rejected;
+      xlsFileName[who]=file.name;
+      renderXlsPreview(who);
       toast('✅ قُرئ '+parsed.length+' كتاب'+(rejected.length?' | 🚫 '+rejected.length+' مرفوض':''));
     }catch(err){toast('⚠️ خطأ في قراءة الملف');console.error(err);}
   };
@@ -2353,67 +2365,15 @@ function parseXls(file,who){
 function importXls(who){
   var parsed=xlsP[who];
   if(!parsed||!parsed.length)return;
-  var bk=DB.g('books')||[];
-  parsed.forEach(function(b){
-    var nb=Object.assign({},b,{level:stageKey(b.level),global:who==='admin',school:who==='lib'?CU.school:null});
-    bk.push(nb);
-    if(supaEnabled) DB_supa.addBook(nb);
-  });
+  var bk=DB.g('books');
+  parsed.forEach(function(b){var nb=Object.assign({},b,{global:who==='admin',school:who==='lib'?CU.school:null}); bk.push(nb); if(supaEnabled)DB_supa.addBook(nb);});
   DB.s('books',bk);
-  xlsP[who]=[];
+  xlsP[who]=[]; xlsRejected[who]=[];
   var pid='xp'+(who==='admin'?'A':'L');
   document.getElementById(pid).style.display='none';
-  if(who==='admin'){rAdminBooks();toast('✅ تمت إضافة الكتب للمكتبة العامة وقاعدة البيانات');}
-  else{rLibBooks();toast('✅ تمت إضافة الكتب لمكتبة مدرستك وقاعدة البيانات');}
+  if(who==='admin'){rAdminBooks();toast('✅ تمت إضافة الكتب للمكتبة العامة');}
+  else{rLibBooks();toast('✅ تمت إضافة الكتب لمكتبة مدرستك');}
 }
-
-function onStuXlsDrop(e){ e.preventDefault(); var f=e.dataTransfer.files[0]; if(f)parseStuXls(f); }
-function parseStuXls(file){
-  if(!file)return;
-  var reader=new FileReader();
-  reader.onload=function(ev){
-    try{
-      var data=new Uint8Array(ev.target.result);
-      var wb=XLSX.read(data,{type:'array'});
-      var ws=wb.Sheets[wb.SheetNames[0]];
-      var rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
-      var start=(rows[0]&&(String(rows[0][0]).includes('اسم')||String(rows[0][1]).includes('رقم')))?1:0;
-      var parsed=[];
-      for(var i=start;i<rows.length;i++){
-        var r=rows[i]; var name=String(r[0]||'').trim(); var id=String(r[1]||'').trim();
-        if(!name||!id) continue;
-        parsed.push({id:id,school:CU.school,name:name,grade:String(r[2]||'').trim()||'الصف الأول',cls:String(r[3]||'').trim(),books:[],pts:0,scores:{}});
-      }
-      xlsP.students=parsed;
-      document.getElementById('xpStu').style.display='block';
-      document.getElementById('xpStuTitle').textContent='👥 '+file.name+' — '+parsed.length+' طالب';
-      document.getElementById('xpStuList').innerHTML=parsed.slice(0,8).map(function(st){return '<div class="xi"><strong style="flex:1;color:var(--navy)">'+st.name+'</strong><code>'+st.id+'</code><span class="badge bb" style="font-size:10px">'+st.grade+'</span></div>';}).join('')+(parsed.length>8?'<div class="xi" style="color:var(--muted)">+ '+(parsed.length-8)+' طالب...</div>':'');
-    }catch(err){toast('⚠️ خطأ في قراءة ملف الطلاب');console.error(err);}
-  };
-  reader.readAsArrayBuffer(file);
-}
-function importStuXls(){
-  var parsed=xlsP.students||[]; if(!parsed.length)return;
-  var sts=DB.g('students')||[]; var added=0, skipped=0;
-  parsed.forEach(function(st){
-    if(sts.find(function(x){return x.id===st.id;})){skipped++; return;}
-    sts.push(st); added++;
-    if(supaEnabled) DB_supa.addStudent(st);
-  });
-  DB.s('students',sts); xlsP.students=[];
-  document.getElementById('xpStu').style.display='none';
-  rLibStudents(); toast('✅ أضيف '+added+' طالب'+(skipped?' | تكرار: '+skipped:''));
-}
-function dlStudentTemplate(){
-  var ws=XLSX.utils.aoa_to_sheet([
-    ['اسم_الطالب','الرقم_الدراسي','الصف','الفصل'],
-    ['محمد أحمد','10042','الصف الرابع','أ'],
-    ['فاطمة علي','10043','الصف الخامس','ب']
-  ]);
-  var wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'قائمة الطلاب');
-  XLSX.writeFile(wb,'نموذج_طلاب_الفلاح_2026.xlsx');
-}
-
 function dlTemplate(){
   var ws=XLSX.utils.aoa_to_sheet([
     ['عنوان_الكتاب','المؤلف','موضوع_الكتاب','سنة_النشر','المرحلة_الدراسية','عدد_الصفحات','رابط_رقمي','النقاط','دار_النشر'],
