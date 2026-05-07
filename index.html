@@ -57115,6 +57115,430 @@ body[data-fr-role="director"] .fr-done{display:none!important}
 @media(max-width:900px){.fr-admin-grid{grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px}.fr-admin-cover{height:190px}.fr-admin-card{min-height:300px}}
 @media(max-width:520px){.fr-admin-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.fr-admin-cover{height:170px}.fr-admin-title{font-size:12.5px}.fr-admin-author{font-size:11px}.fr-admin-meta span{font-size:10px}.fr-admin-pages{position:sticky;bottom:0;background:rgba(244,248,253,.94);padding:10px;border-radius:16px;backdrop-filter:blur(4px)}}
 </style>
+<!-- ═══════════════════════════════════════════
+     ENHANCEMENTS v2 — إضافات بدون تعديل البنية
+     ═══════════════════════════════════════════ -->
+<style id="enhancements-css">
+/* ── بحث سريع ── */
+.qs-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:99000;display:none;align-items:flex-start;justify-content:center;padding-top:80px;backdrop-filter:blur(3px)}
+.qs-overlay.on{display:flex}
+.qs-box{background:#fff;border-radius:20px;width:100%;max-width:580px;box-shadow:0 24px 70px rgba(0,0,0,.28);overflow:hidden;direction:rtl}
+.qs-bar{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border)}
+.qs-ico{font-size:18px;color:var(--muted)}
+.qs-inp{flex:1;border:none;outline:none;font-family:'Cairo',sans-serif;font-size:15px;font-weight:700;color:var(--text);background:transparent}
+.qs-inp::placeholder{color:var(--muted);font-weight:400}
+.qs-close-btn{border:none;background:#f0f4f8;border-radius:8px;padding:5px 10px;font-size:11px;color:var(--muted);font-family:'Cairo';cursor:pointer;font-weight:700}
+.qs-results{max-height:360px;overflow-y:auto}
+.qs-item{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid #f0f4f8;cursor:pointer;transition:background .15s}
+.qs-item:last-child{border-bottom:none}
+.qs-item:hover{background:#f4f8fd}
+.qs-item-ico{font-size:22px;flex-shrink:0;width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:#f0f4f8;border-radius:10px}
+.qs-item-info{flex:1;min-width:0}
+.qs-item-title{font-size:13px;font-weight:900;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qs-item-meta{font-size:10px;color:var(--muted);margin-top:2px}
+.qs-item-pts{font-size:11px;font-weight:900;color:var(--gold);flex-shrink:0}
+.qs-empty{padding:28px;text-align:center;color:var(--muted);font-size:13px}
+.qs-hint{padding:10px 16px;background:#f8fbff;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.qs-hint kbd{background:#edf2f7;border:1px solid #c9d7e6;border-radius:5px;padding:2px 6px;font-size:10px;font-family:monospace}
+/* ── زر الرجوع للأعلى ── */
+#scrollTopBtn{position:fixed;bottom:24px;left:20px;z-index:8000;width:42px;height:42px;border-radius:50%;background:var(--grad);color:#fff;border:none;font-size:18px;cursor:pointer;box-shadow:0 4px 16px rgba(13,74,138,.3);opacity:0;transform:translateY(10px);transition:all .25s;display:flex;align-items:center;justify-content:center}
+#scrollTopBtn.show{opacity:1;transform:translateY(0)}
+/* ── تحذير انتهاء الجلسة ── */
+#sessionWarnBanner{position:fixed;top:0;left:0;right:0;z-index:99500;background:linear-gradient(135deg,#f5a623,#e8941a);color:#fff;padding:10px 20px;display:none;align-items:center;gap:12px;font-family:'Cairo';font-size:13px;font-weight:700;direction:rtl}
+#sessionWarnBanner.on{display:flex}
+#sessionWarnBanner button{margin-right:auto;background:rgba(255,255,255,.25);border:1.5px solid rgba(255,255,255,.5);border-radius:8px;padding:5px 14px;color:#fff;font-family:'Cairo';font-size:12px;font-weight:900;cursor:pointer}
+/* ── كتاب اليوم ── */
+.botd-wrap{background:linear-gradient(135deg,#07345e,#0d4a8a);border-radius:20px;padding:16px;color:#fff;display:flex;align-items:center;gap:14px;margin-bottom:14px;position:relative;overflow:hidden}
+.botd-wrap::before{content:'';position:absolute;top:-40px;left:-40px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.06)}
+.botd-cover{width:58px;height:80px;border-radius:10px;object-fit:cover;flex-shrink:0;background:#1a5fa8;display:flex;align-items:center;justify-content:center;font-size:28px;border:2px solid rgba(255,255,255,.2)}
+.botd-info{flex:1;position:relative;z-index:1}
+.botd-label{font-size:10px;color:#ffe07a;font-weight:900;margin-bottom:4px;letter-spacing:.5px}
+.botd-title{font-size:15px;font-weight:900;line-height:1.4;margin-bottom:3px}
+.botd-author{font-size:11px;opacity:.8}
+.botd-btn{margin-top:8px;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.35);border-radius:8px;padding:6px 12px;color:#fff;font-family:'Cairo';font-size:11px;font-weight:900;cursor:pointer;transition:.2s}
+.botd-btn:hover{background:rgba(255,255,255,.28)}
+/* ── إصلاح تداخل زر الرئيسية مع اللوجو ── */
+.home-btn{
+  top:70px!important;
+  right:auto!important;
+  left:14px!important;
+  z-index:8500!important;
+}
+/* ── توسيط اللوجو في الـ topbar ── */
+.topbar{position:relative!important;}
+.tb-brand{
+  position:absolute!important;
+  left:50%!important;
+  transform:translateX(-50%)!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  gap:2px!important;
+  pointer-events:none;
+  z-index:1;
+}
+.tb-logo{height:46px!important;filter:drop-shadow(0 2px 10px rgba(255,255,255,.5))!important;}
+.tb-name{font-size:11px!important;text-align:center!important;line-height:1.2!important;}
+.tb-sub{font-size:9px!important;text-align:center!important;opacity:.75!important;}
+/* ── تحسين اللوجو في الـ sidebar ── */
+.sn-top{padding:22px 10px 16px!important;}
+.sn-top img{height:64px!important;width:auto!important;filter:drop-shadow(0 4px 12px rgba(13,74,138,.18))!important;}
+.sn-name{font-size:13px!important;font-weight:900!important;margin-top:8px!important;color:var(--navy)!important;}
+/* ── جعل زر "أنهيت — افتح الاختبار" أوضح وأجمل ── */
+.fr-done{
+  background:linear-gradient(135deg,#0a7a5e,#0d9870)!important;
+  color:#fff!important;
+  border:none!important;
+  font-weight:900!important;
+}
+.fr-done:hover{opacity:.88!important;}
+/* ── لوجو وسط المحتوى (watermark) ── */
+#logoWatermark{
+  position:fixed;
+  /* توسيط في منطقة المحتوى: الـ sidebar عرضه 210px من اليمين في RTL */
+  right:calc(210px + (100vw - 210px)/2 - 150px);
+  top:calc(58px + (100vh - 58px)/2 - 150px);
+  width:300px;height:300px;
+  object-fit:contain;
+  opacity:0.045;
+  pointer-events:none;
+  z-index:0;
+  display:none;
+  transition:opacity .4s;
+}
+#logoWatermark.vis{display:block;}
+@media(max-width:900px){
+  #logoWatermark{right:calc(50vw - 150px);top:calc(58px + (100vh - 58px)/2 - 150px);}
+  .home-btn{left:auto!important;right:14px!important;top:70px!important;}
+}
+/* ── طباعة ── */
+@media print{
+  .snav,.topbar,.home-btn,.nb,#scrollTopBtn,.qs-overlay,#sessionWarnBanner,#logoWatermark{display:none!important}
+  .bwrap{display:block}
+  .cnt{overflow:visible;padding:10px}
+  .app,.bwrap,.cnt,.pg.on{display:block!important}
+  body{font-size:11pt}
+  .krow{display:flex;gap:8px}
+  .kpi{border:1px solid #ccc;padding:10px;border-radius:8px}
+  .ph{background:#0d4a8a!important;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+</style>
+
+<!-- بحث سريع (Ctrl+K) -->
+<div class="qs-overlay" id="qsOverlay" onclick="if(event.target===this)closeQS()">
+  <div class="qs-box">
+    <div class="qs-bar">
+      <span class="qs-ico">🔍</span>
+      <input class="qs-inp" id="qsInput" placeholder="ابحث عن كتاب بالعنوان أو المؤلف..." oninput="doQS(this.value)" autocomplete="off">
+      <button class="qs-close-btn" onclick="closeQS()">Esc</button>
+    </div>
+    <div class="qs-results" id="qsResults">
+      <div class="qs-empty">اضغط Ctrl+K أو ابحث عن أي كتاب في المنصة</div>
+    </div>
+    <div class="qs-hint">💡 <span>اضغط <kbd>Ctrl</kbd>+<kbd>K</kbd> للبحث السريع — <kbd>Esc</kbd> للإغلاق</span></div>
+  </div>
+</div>
+
+<!-- زر الرجوع للأعلى -->
+<button id="scrollTopBtn" title="رجوع للأعلى" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- لوجو وسط الصفحة (watermark) -->
+<img id="logoWatermark" alt="" src="">
+
+<!-- تحذير انتهاء الجلسة -->
+<div id="sessionWarnBanner">
+  <span>⚠️</span>
+  <span id="sessionWarnMsg">ستنتهي جلستك خلال 5 دقائق — هل تريد الاستمرار؟</span>
+  <button onclick="extendSession()">تمديد الجلسة</button>
+</div>
+
+<script id="enhancements-js">
+(function(){
+'use strict';
+
+/* ════════════ 1. بحث سريع ════════════ */
+function openQS(){
+  var ov=document.getElementById('qsOverlay');
+  if(ov){ov.classList.add('on'); setTimeout(function(){var i=document.getElementById('qsInput');if(i)i.focus();},60);}
+}
+function closeQS(){
+  var ov=document.getElementById('qsOverlay');
+  if(ov)ov.classList.remove('on');
+  var i=document.getElementById('qsInput'); if(i)i.value='';
+  var r=document.getElementById('qsResults'); if(r)r.innerHTML='<div class="qs-empty">اضغط Ctrl+K أو ابحث عن أي كتاب في المنصة</div>';
+}
+window.closeQS=closeQS;
+
+function doQS(q){
+  var r=document.getElementById('qsResults'); if(!r)return;
+  q=(q||'').trim();
+  if(q.length<2){r.innerHTML='<div class="qs-empty">اكتب حرفين على الأقل للبحث</div>';return;}
+  var all=[];
+  try{if(typeof DB!=='undefined'&&DB.g)all=DB.g('books')||[];}catch(e){}
+  var ql=q.toLowerCase();
+  var hits=all.filter(function(b){
+    return (b.title||'').toLowerCase().indexOf(ql)>=0||(b.author||'').toLowerCase().indexOf(ql)>=0;
+  }).slice(0,12);
+  if(!hits.length){r.innerHTML='<div class="qs-empty">لا توجد نتائج لـ «'+q+'»</div>';return;}
+  r.innerHTML=hits.map(function(b){
+    var ico=b.icon||'📚';
+    var lvShort=(b.level||'').split(' ')[0]||'';
+    var safeId=esc(b.id||'');
+    return '<div class="qs-item" data-bookid="'+safeId+'">'+
+      '<div class="qs-item-ico">'+ico+'</div>'+
+      '<div class="qs-item-info">'+
+        '<div class="qs-item-title">'+esc(b.title||'')+'</div>'+
+        '<div class="qs-item-meta">'+(b.author?esc(b.author)+' \u2014 ':'')+esc(lvShort)+'</div>'+
+      '</div>'+
+      '<div class="qs-item-pts">\u2b50 '+(b.pts||0)+'</div>'+
+    '</div>';
+  }).join('');
+  Array.prototype.forEach.call(r.querySelectorAll('.qs-item'),function(el){
+    el.addEventListener('click',function(){
+      var bid=el.getAttribute('data-bookid');
+      closeQS();
+      if(bid&&typeof showDetails==='function')showDetails(bid);
+    });
+  });
+}
+window.doQS=doQS;
+
+function esc(s){return String(s||'').replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c];});}
+
+/* ════════════ 2. اختصارات لوحة المفاتيح ════════════ */
+document.addEventListener('keydown',function(e){
+  /* Ctrl+K → بحث سريع */
+  if((e.ctrlKey||e.metaKey)&&e.key==='k'){
+    e.preventDefault();
+    if(!document.getElementById('qsOverlay'))return;
+    if(document.getElementById('qsOverlay').classList.contains('on'))closeQS();
+    else openQS();
+    return;
+  }
+  /* Escape → إغلاق أي نافذة مفتوحة */
+  if(e.key==='Escape'){
+    closeQS();
+    /* إغلاق modals المعروفة */
+    ['fxCatalog','fxDetail','addSchModal'].forEach(function(id){
+      var el=document.getElementById(id); if(el&&el.classList.contains('on'))el.classList.remove('on');
+    });
+    document.querySelectorAll('.rt-modal.on,.fx-detail.on,.fx-catalog.on,.qs-overlay.on').forEach(function(el){el.classList.remove('on');});
+  }
+});
+
+/* ════════════ 3. زر رجوع للأعلى ════════════ */
+var cnt=document.querySelector('.cnt');
+if(cnt){
+  cnt.addEventListener('scroll',function(){
+    var btn=document.getElementById('scrollTopBtn');
+    if(btn)btn.classList.toggle('show',cnt.scrollTop>220);
+  });
+}
+document.getElementById('scrollTopBtn').addEventListener('click',function(){
+  var c=document.querySelector('.cnt'); if(c)c.scrollTo({top:0,behavior:'smooth'});
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* ════════════ 4. كتاب اليوم للطالب ════════════ */
+function injectBotd(){
+  try{
+    if(typeof CU==='undefined'||CU.role!=='student')return;
+    var hero=document.querySelector('#pg-stu-home .nf-hero');
+    if(!hero||document.getElementById('botdBlock'))return;
+    var all=[]; try{if(typeof DB!=='undefined'&&DB.g)all=DB.g('books')||[];}catch(e){}
+    if(!all.length)return;
+    var dayIndex=Math.floor(Date.now()/86400000)%all.length;
+    var b=all[dayIndex];
+    if(!b)return;
+    var wrap=document.createElement('div');
+    wrap.id='botdBlock';
+    wrap.className='botd-wrap';
+    var btn=document.createElement('button');
+    btn.className='botd-btn';
+    btn.textContent='\uD83D\uDD0D اعرف أكثر';
+    btn.addEventListener('click',function(){if(typeof showDetails==='function')showDetails(b.id||'');});
+    var divInfo=document.createElement('div');
+    divInfo.className='botd-info';
+    divInfo.innerHTML=
+      '<div class="botd-label">\uD83D\uDCC5 كتاب اليوم</div>'+
+      '<div class="botd-title">'+esc(b.title||'')+'</div>'+
+      '<div class="botd-author">'+(b.author?'\u270D\uFE0F '+esc(b.author):'')+(b.pts?' \u2014 \u2B50 '+b.pts+' نقطة':'')+'</div>';
+    divInfo.appendChild(btn);
+    var divCover=document.createElement('div');
+    divCover.className='botd-cover';
+    divCover.style.cssText='font-size:28px;display:flex;align-items:center;justify-content:center';
+    divCover.textContent=b.icon||'\uD83D\uDCDA';
+    wrap.appendChild(divCover);
+    wrap.appendChild(divInfo);
+    hero.insertAdjacentElement('afterend',wrap);
+  }catch(e){}
+}
+
+/* ════════════ 5. أرقام KPI متحركة ════════════ */
+function animateCounter(el,target){
+  var start=0,dur=900,step=Math.ceil(dur/60);
+  var inc=target/step;
+  var timer=setInterval(function(){
+    start+=inc;
+    if(start>=target){start=target;clearInterval(timer);}
+    el.textContent=Math.round(start);
+  },dur/step);
+}
+function runCounters(){
+  document.querySelectorAll('.kpi .kn').forEach(function(el){
+    var raw=el.textContent.trim();
+    var num=parseFloat(raw.replace(/[^\d.]/g,''));
+    if(!isNaN(num)&&num>0&&!el.dataset.animated){el.dataset.animated='1';animateCounter(el,num);}
+  });
+}
+
+/* ════════════ 6. وقت القراءة التقريبي ════════════ */
+function readingTimeText(pages){
+  pages=parseInt(pages,10)||0;
+  if(!pages)return '';
+  var mins=Math.round(pages*1.8);
+  if(mins<60)return '⏱ '+mins+' دقيقة';
+  var h=Math.floor(mins/60),m=mins%60;
+  return '⏱ '+h+' س'+(m?' '+m+' د':'');
+}
+/* تحديث بطاقات الكتب بوقت القراءة — يعمل بعد كل render */
+function patchReadingTimes(){
+  try{
+    if(typeof DB==='undefined')return;
+    var bks=DB.g('books')||[];
+    bks.forEach(function(b){
+      var el=document.getElementById('cv-'+b.id);
+      if(el&&b.pages&&!el.dataset.rtPatched){
+        el.dataset.rtPatched='1';
+        var parent=el.closest('.bk');
+        if(parent){
+          var existing=parent.querySelector('.rt-badge-time');
+          if(!existing){
+            var sp=document.createElement('span');
+            sp.className='rt-badge-time';
+            sp.style.cssText='position:absolute;bottom:5px;left:5px;background:rgba(0,0,0,.62);color:#fff;border-radius:999px;padding:2px 7px;font-size:9px;font-weight:900;z-index:4;pointer-events:none';
+            sp.textContent=readingTimeText(b.pages);
+            var bc=parent.querySelector('.bc');
+            if(bc){bc.style.position='relative';bc.appendChild(sp);}
+          }
+        }
+      }
+    });
+  }catch(e){}
+}
+
+/* ════════════ 7. تحذير انتهاء الجلسة (30 دقيقة) ════════════ */
+var _sesTimer,_sesWarnShown=false;
+function resetSession(){
+  clearTimeout(_sesTimer);
+  _sesWarnShown=false;
+  var ban=document.getElementById('sessionWarnBanner');
+  if(ban)ban.classList.remove('on');
+  _sesTimer=setTimeout(function(){
+    try{if(typeof CU==='undefined'||!CU)return;}catch(e){return;}
+    var ban2=document.getElementById('sessionWarnBanner');
+    if(ban2&&!_sesWarnShown){
+      _sesWarnShown=true;
+      ban2.classList.add('on');
+    }
+  },25*60*1000); /* 25 دقيقة تحذير قبل 5 دقائق */
+}
+window.extendSession=function(){
+  resetSession();
+  if(typeof toast==='function')toast('✅ تم تمديد الجلسة بنجاح');
+};
+['click','keydown','touchstart'].forEach(function(ev){
+  document.addEventListener(ev,resetSession,{passive:true});
+});
+resetSession();
+
+/* ════════════ 8. زر بحث سريع في الـ topbar ════════════ */
+function injectSearchBtn(){
+  var tbRight=document.querySelector('.tb-right');
+  if(tbRight&&!document.getElementById('qsNavBtn')){
+    var btn=document.createElement('button');
+    btn.id='qsNavBtn';
+    btn.title='بحث سريع (Ctrl+K)';
+    btn.style.cssText='background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.28);border-radius:8px;padding:6px 12px;color:#fff;font-family:Cairo,sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px';
+    btn.innerHTML='🔍 <span>بحث</span>';
+    btn.onclick=openQS;
+    tbRight.insertBefore(btn,tbRight.firstChild);
+  }
+}
+
+/* ════════════ 9. زر طباعة التقارير ════════════ */
+function injectPrintBtns(){
+  ['pg-dir-home','pg-lib-home','pg-lib-students'].forEach(function(pgId){
+    var pg=document.getElementById(pgId);
+    if(!pg||pg.querySelector('.print-report-btn'))return;
+    var ph=pg.querySelector('.ph');
+    if(!ph)return;
+    var btn=document.createElement('button');
+    btn.className='print-report-btn btn bo2 bs';
+    btn.style.cssText='position:absolute;top:14px;left:14px;z-index:2;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.4);color:#fff;border-radius:10px;padding:7px 13px;font-family:Cairo,sans-serif;font-size:12px;font-weight:900;cursor:pointer;display:flex;align-items:center;gap:5px';
+    btn.innerHTML='🖨️ طباعة';
+    btn.onclick=function(){window.print();};
+    ph.style.position='relative';
+    ph.appendChild(btn);
+  });
+}
+
+/* ════════════ 10. لوجو وسط الصفحة ════════════ */
+function setupLogoWatermark(){
+  try{
+    var wm=document.getElementById('logoWatermark');
+    if(!wm)return;
+    /* اجلب مصدر اللوجو من أي صورة موجودة في الصفحة */
+    if(!wm.src||wm.src===window.location.href){
+      var srcEl=document.getElementById('loginLogo')||document.querySelector('.tb-logo')||document.querySelector('.sn-top img');
+      if(srcEl&&srcEl.src&&srcEl.src.length>10)wm.src=srcEl.src;
+    }
+  }catch(e){}
+}
+function updateWatermark(){
+  try{
+    var wm=document.getElementById('logoWatermark'); if(!wm)return;
+    /* أظهر الـ watermark فقط عند وجود حساب مسجّل دخول */
+    var active=false;
+    try{if(typeof CU!=='undefined'&&CU&&CU.role)active=true;}catch(e){}
+    if(active&&(!wm.src||wm.src===window.location.href))setupLogoWatermark();
+    wm.classList.toggle('vis',active);
+  }catch(e){}
+}
+function onAppReady(){
+  injectSearchBtn();
+  injectPrintBtns();
+  injectBotd();
+  runCounters();
+  patchReadingTimes();
+  setupLogoWatermark();
+  updateWatermark();
+}
+
+/* مراقبة تغيرات DOM لإعادة تطبيق التحسينات عند كل render */
+var _lastPg='';
+setInterval(function(){
+  var cur=document.querySelector('.pg.on');
+  var pgId=cur?cur.id:'';
+  if(pgId!==_lastPg){
+    _lastPg=pgId;
+    setTimeout(function(){
+      runCounters();
+      patchReadingTimes();
+      injectBotd();
+      injectPrintBtns();
+      updateWatermark();
+    },300);
+  }
+},600);
+
+/* انتظار تحميل التطبيق */
+setTimeout(onAppReady,1200);
+setTimeout(onAppReady,3000);
+document.addEventListener('DOMContentLoaded',onAppReady);
+
+})();
+</script>
+
 <script id="fr-admin-final-grid-patch-script">
 (function(){
   var PAGE_SIZE = 24;
@@ -57126,34 +57550,46 @@ body[data-fr-role="director"] .fr-done{display:none!important}
   function booksList(){try{if(typeof books==='function')return books(); if(window.DB&&DB.g)return DB.g('books')||[]}catch(e){} return []}
   function schoolsList(){try{if(typeof schools==='function')return schools(); if(window.DB&&DB.g)return DB.g('schools')||[]}catch(e){} return []}
   function bookId(b){try{if(typeof bid==='function')return bid(b)}catch(e){} return b.id||b.link||b.title||Math.random()}
-  function stageLabel(b){try{if(typeof stageKey==='function'&&typeof stageName==='function')return stageName(stageKey(b))}catch(e){} return b.stage||b.level||'جميع المراحل'}
-  function coverHtml(b){try{if(typeof coverBlock==='function')return coverBlock(b)}catch(e){} var u=b.cover_url||b.cover||b.cover_local_path||''; return u?'<img src="'+esc(u)+'" alt="">':'<div class="fr-real-fallback">📚</div>'}
-  function itemCard(b){var id=bookId(b); return '<div class="fr-admin-card" onclick="showDetails(''+String(id).replace(/\/g,'\\').replace(/'/g,"\'")+'')"><div class="fr-admin-cover">'+coverHtml(b)+'<span class="fr-admin-stage">'+esc(stageLabel(b))+'</span></div><div class="fr-admin-info"><div class="fr-admin-title">'+esc(b.title||'بدون عنوان')+'</div><div class="fr-admin-author">'+esc(b.author||'—')+'</div><div class="fr-admin-meta"><span>'+esc(b.subject||'عام')+'</span><span>⭐ '+esc(b.pts||20)+'</span></div></div></div>'}
+  function stageLabel(b){try{if(typeof stageKey==='function'&&typeof stageName==='function')return stageName(stageKey(b))}catch(e){} return b.stage||b.level||'\u062c\u0645\u064a\u0639 \u0627\u0644\u0645\u0631\u0627\u062d\u0644'}
+  function coverHtml(b){try{if(typeof coverBlock==='function')return coverBlock(b)}catch(e){} var u=b.cover_url||b.cover||b.cover_local_path||''; return u?'<img src="'+esc(u)+'" alt="">':'<div class="fr-real-fallback">\ud83d\udcda</div>'}
+  /* ── إصلاح Syntax: onclick مضمّن وموثوق بدون دوال خارجية ── */
+  function itemCard(b){
+    var id=bookId(b), safeId=esc(String(id));
+    return '<div class="fr-admin-card" data-bid="'+safeId+'" onclick="window.showDetails&&window.showDetails(this.getAttribute(\'data-bid\'))">'+
+      '<div class="fr-admin-cover">'+coverHtml(b)+'<span class="fr-admin-stage">'+esc(stageLabel(b))+'</span></div>'+
+      '<div class="fr-admin-info">'+
+        '<div class="fr-admin-title">'+esc(b.title||'\u0628\u062f\u0648\u0646 \u0639\u0646\u0648\u0627\u0646')+'</div>'+
+        '<div class="fr-admin-author">'+esc(b.author||'\u2014')+'</div>'+
+        '<div class="fr-admin-meta"><span>'+esc(b.subject||'\u0639\u0627\u0645')+'</span><span>\u2b50 '+esc(b.pts||20)+'</span></div>'+
+      '</div></div>';
+  }
   function renderPaged(container, list, key, title){
     if(!container)return; list=list||[]; var total=list.length; var pages=Math.max(1,Math.ceil(total/PAGE_SIZE)); var p=pageState[key]||1; if(p>pages)p=pages; if(p<1)p=1; pageState[key]=p;
     var start=(p-1)*PAGE_SIZE, rows=list.slice(start,start+PAGE_SIZE);
-    var btns=[]; btns.push('<button '+(p<=1?'disabled':'')+' onclick="frAdminGoPage(''+key+'','+(p-1)+')">السابق</button>');
-    var from=Math.max(1,p-2), to=Math.min(pages,p+2); if(from>1){btns.push('<button onclick="frAdminGoPage(''+key+'',1)">1</button>'); if(from>2)btns.push('<span>…</span>')}
-    for(var i=from;i<=to;i++)btns.push('<button class="'+(i===p?'active':'')+'" onclick="frAdminGoPage(''+key+'','+i+')">'+i+'</button>');
-    if(to<pages){if(to<pages-1)btns.push('<span>…</span>'); btns.push('<button onclick="frAdminGoPage(''+key+'','+pages+')">'+pages+'</button>')}
-    btns.push('<button '+(p>=pages?'disabled':'')+' onclick="frAdminGoPage(''+key+'','+(p+1)+')">التالي</button>');
-    container.innerHTML='<div class="fr-admin-catalog"><div class="fr-admin-toolbar"><div class="sec">'+esc(title||'الكتب')+'</div><span class="fr-admin-count">'+total+' كتاب — صفحة '+p+' من '+pages+'</span></div><div class="fr-admin-grid">'+rows.map(itemCard).join('')+'</div><div class="fr-admin-pages">'+btns.join('')+'</div></div>';
+    var qk=esc(key);
+    var btns=[];
+    btns.push('<button '+(p<=1?'disabled':'')+' onclick="frAdminGoPage(\''+qk+'\','+(p-1)+')\">\u0627\u0644\u0633\u0627\u0628\u0642</button>');
+    var from=Math.max(1,p-2), to=Math.min(pages,p+2);
+    if(from>1){btns.push('<button onclick="frAdminGoPage(\''+qk+'\',1)">1</button>'); if(from>2)btns.push('<span>\u2026</span>')}
+    for(var i=from;i<=to;i++)btns.push('<button class="'+(i===p?'active':'')+'" onclick="frAdminGoPage(\''+qk+'\','+i+')">'+i+'</button>');
+    if(to<pages){if(to<pages-1)btns.push('<span>\u2026</span>'); btns.push('<button onclick="frAdminGoPage(\''+qk+'\','+pages+')">'+pages+'</button>')}
+    btns.push('<button '+(p>=pages?'disabled':'')+' onclick="frAdminGoPage(\''+qk+'\','+(p+1)+')">\u0627\u0644\u062a\u0627\u0644\u064a</button>');
+    container.innerHTML='<div class="fr-admin-catalog"><div class="fr-admin-toolbar"><div class="sec">'+esc(title||'\u0627\u0644\u0643\u062a\u0628')+'</div><span class="fr-admin-count">'+total+' \u0643\u062a\u0627\u0628 \u2014 \u0635\u0641\u062d\u0629 '+p+' \u0645\u0646 '+pages+'</span></div><div class="fr-admin-grid">'+rows.map(itemCard).join('')+'</div><div class="fr-admin-pages">'+btns.join('')+'</div></div>';
   }
   window.frAdminGoPage=function(key,p){pageState[key]=p; try{if(role()==='admin')window.rAdminBooks&&rAdminBooks(); else if(role()==='librarian')window.rLibBooks&&rLibBooks();}catch(e){console.warn(e)}};
   window.rAdminBooks=function(){
     setRoleAttr(); var all=booksList(), global=all.filter(function(b){return b.global});
-    renderPaged(document.getElementById('gbGrid'), global, 'admin', '📚 الكتب العامة');
-    var f=document.getElementById('adminSchoolFolders'); if(f){var sc=schoolsList(); f.innerHTML=sc.map(function(s){var own=all.filter(function(b){return b.school===s.id}).length,total=all.filter(function(b){return b.global||b.school===s.id}).length; return '<div class="school-folder" onclick="showAdminSchoolBooks(''+esc(s.id)+'')"><div class="folder-ico">📁 '+esc(s.icon||'')+'</div><div class="folder-name">'+esc(s.name||s.id)+'</div><div class="folder-meta">'+total+' كتاب: '+global.length+' عام + '+own+' خاص</div><span class="folder-open">فتح المكتبة</span></div>'}).join('')}
+    renderPaged(document.getElementById('gbGrid'), global, 'admin', '\ud83d\udcda \u0627\u0644\u0643\u062a\u0628 \u0627\u0644\u0639\u0627\u0645\u0629');
+    var f=document.getElementById('adminSchoolFolders'); if(f){var sc=schoolsList(); f.innerHTML=sc.map(function(s){var own=all.filter(function(b){return b.school===s.id}).length,total=all.filter(function(b){return b.global||b.school===s.id}).length; return '<div class="school-folder" data-sid="'+esc(s.id)+'" onclick="window.showAdminSchoolBooks&&window.showAdminSchoolBooks(this.getAttribute(\'data-sid\'))"><div class="folder-ico">\ud83d\udcc1 '+esc(s.icon||'')+'</div><div class="folder-name">'+esc(s.name||s.id)+'</div><div class="folder-meta">'+total+' \u0643\u062a\u0627\u0628: '+global.length+' \u0639\u0627\u0645 + '+own+' \u062e\u0627\u0635</div><span class="folder-open">\u0641\u062a\u062d \u0627\u0644\u0645\u0643\u062a\u0628\u0629</span></div>'}).join('')}
   };
   window.rLibBooks=function(){
     setRoleAttr(); var all=booksList(), sid=(window.CU&&CU.school)||'', sb=all.filter(function(b){return b.school===sid}), gb=all.filter(function(b){return b.global});
-    renderPaged(document.getElementById('sbGrid'), sb, 'libSchool', '📘 كتب مدرستك الخاصة');
-    renderPaged(document.getElementById('gbLibGrid'), gb, 'libGlobal', '📚 الكتب العامة');
+    renderPaged(document.getElementById('sbGrid'), sb, 'libSchool', '\ud83d\udcd8 \u0643\u062a\u0628 \u0645\u062f\u0631\u0633\u062a\u0643 \u0627\u0644\u062e\u0627\u0635\u0629');
+    renderPaged(document.getElementById('gbLibGrid'), gb, 'libGlobal', '\ud83d\udcda \u0627\u0644\u0643\u062a\u0628 \u0627\u0644\u0639\u0627\u0645\u0629');
   };
   window.showAdminSchoolBooks=function(sid){
-    setRoleAttr(); var all=booksList(), sc=schoolsList().find(function(s){return s.id===sid})||{}; var list=all.filter(function(b){return b.global||b.school===sid}); var box=document.getElementById('gbGrid')||document.getElementById('adminSchoolFolders'); renderPaged(box,list,'adminSchool_'+sid,'📚 مكتبة '+(sc.name||sid));
+    setRoleAttr(); var all=booksList(), sc=schoolsList().find(function(s){return s.id===sid})||{}; var list=all.filter(function(b){return b.global||b.school===sid}); var box=document.getElementById('gbGrid')||document.getElementById('adminSchoolFolders'); renderPaged(box,list,'adminSchool_'+sid,'\ud83d\udcda \u0645\u0643\u062a\u0628\u0629 '+(sc.name||sid));
   };
-  // تفاصيل الكتاب: أزرار القراءة فقط للطالب، وبقية الأدوار مشاهدة فقط
   var oldShow=window.showDetails;
   window.showDetails=function(id){
     if(oldShow)oldShow(id);
@@ -57161,7 +57597,7 @@ body[data-fr-role="director"] .fr-done{display:none!important}
       setRoleAttr();
       if(role()!=='student'){
         document.querySelectorAll('.fr-detail-actions,.fr-compact-actions,.fr-start,.fr-done').forEach(function(x){x.style.display='none'});
-        var note=document.querySelector('#frReadNote,.fr-compact-note'); if(note){note.textContent='وضع مشاهدة فقط: هذه التفاصيل للاطلاع، ولا يتم تسجيل قراءة أو فتح اختبار إلا من حساب الطالب.'}
+        var note=document.querySelector('#frReadNote,.fr-compact-note'); if(note){note.textContent='\u0648\u0636\u0639 \u0645\u0634\u0627\u0647\u062f\u0629 \u0641\u0642\u0637: \u0644\u0627 \u064a\u062a\u0645 \u062a\u0633\u062c\u064a\u0644 \u0642\u0631\u0627\u0621\u0629 \u0648\u0644\u0627 \u0646\u0642\u0627\u0637 \u0644\u0647\u0630\u0627 \u0627\u0644\u062f\u0648\u0631.'}
       }
     },30);
   };
