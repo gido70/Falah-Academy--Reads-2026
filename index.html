@@ -441,11 +441,54 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);direc
 
 <!-- PWA / Mobile app identity -->
 <link rel="manifest" href="manifest.webmanifest">
+<!-- Inline manifest fallback (works when manifest.webmanifest is not available) -->
+<script>
+(function(){
+  try{
+    var lnk=document.querySelector('link[rel="manifest"]');
+    if(lnk&&lnk.href&&lnk.href.indexOf('manifest.webmanifest')>=0){
+      fetch(lnk.href).catch(function(){
+        var d='{"name": "منصة الفلاح للقراءة", "short_name": "الفلاح للقراءة", "description": "منصة إدارة القراءة لأكاديمية الفلاح — Falah Reads 2026", "start_url": "./", "display": "standalone", "background_color": "#0d4a8a", "theme_color": "#0d4a8a", "orientation": "portrait-primary", "lang": "ar", "dir": "rtl", "icons": [{"src": "icons/falah-reads-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"}, {"src": "icons/falah-reads-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}]}';
+        var blob=new Blob([d],{type:'application/manifest+json'});
+        lnk.href=URL.createObjectURL(blob);
+      });
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Apple iOS PWA splash: inject from LOGO_SRC after load -->
+<script>
+window.addEventListener('load',function(){
+  try{
+    if(typeof LOGO_SRC==='undefined'||!LOGO_SRC)return;
+    // apple-touch-icon inline
+    var ai=document.querySelector('link[rel="apple-touch-icon"]');
+    if(ai)ai.href=LOGO_SRC;
+    // Create canvas splash for iOS
+    var canvas=document.createElement('canvas');
+    var W=2048,H=2732; canvas.width=W; canvas.height=H;
+    var ctx=canvas.getContext('2d');
+    ctx.fillStyle='#0d4a8a';
+    ctx.fillRect(0,0,W,H);
+    var img=new Image();
+    img.onload=function(){
+      var s=500;
+      ctx.drawImage(img,(W-s)/2,(H-s)/2,s,s);
+      var dataUrl=canvas.toDataURL('image/png');
+      var meta=document.createElement('link');
+      meta.rel='apple-touch-startup-image';
+      meta.href=dataUrl;
+      document.head.appendChild(meta);
+    };
+    img.src=LOGO_SRC;
+  }catch(e){}
+});
+</script>
 <meta name="theme-color" content="#0d4a8a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="منصة الفلاح للقراءة">
-<link rel="apple-touch-icon" href="icons/falah-reads-192.png">
+<link rel="apple-touch-icon" id="appleIcon" href="icons/falah-reads-192.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/falah-reads-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="icons/falah-reads-512.png">
 
